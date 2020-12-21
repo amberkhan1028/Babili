@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, View, Image, Text,
 } from 'react-native';
-import { PUSHER_KEY } from 'react-native-dotenv';
 import FlipCard from 'react-native-flip-card';
 
 import Header from '../components/MemoryGameHeader';
@@ -39,7 +38,6 @@ const styles = StyleSheet.create({
 });
 
 const MatchingGameScreen = () => {
-  console.warn(PUSHER_KEY);
   const [openedCard, setOpenedCard] = useState([]);
   const [matched, setMatched] = useState([]);
 
