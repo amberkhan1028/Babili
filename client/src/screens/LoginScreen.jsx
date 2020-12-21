@@ -1,8 +1,8 @@
 import React from 'react';
-import {
-  View, StyleSheet, Button,
-} from 'react-native';
 import PropTypes from 'prop-types';
+import {
+  View, Text, StyleSheet, Image, StatusBar, Button,
+} from 'react-native';
 
 import * as Google from 'expo-google-app-auth';
 
@@ -12,9 +12,25 @@ const ANDROID_CLIENT_ID = '932033800797-hbdmbb02jkmg5tv62opqcbasd3esob9b.apps.go
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fec857',
+  },
+  googleContainer: {
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 50,
   },
 });
 
@@ -41,6 +57,17 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle="dark-content"
+      />
+      <View style={styles.logoContainer}>
+        <Text style={styles.title}>babili</Text>
+        <Image
+          style={styles.logo}
+          // eslint-disable-next-line global-require
+          source={require('../../assets/logo.png')}
+        />
+      </View>
       <Button title="Login with Google" onPress={signInWithGoogle} />
     </View>
   );
