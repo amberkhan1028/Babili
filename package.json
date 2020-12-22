@@ -47,7 +47,6 @@
     "fs": "0.0.1-security",
     "metro-react-native-babel-preset": "^0.64.0",
     "path": "^0.12.7",
-    "pg": "^8.5.1",
     "prop-types": "^15.7.2",
     "pusher": "^4.0.2",
     "pusher-js": "^7.0.2",
