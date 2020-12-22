@@ -5,8 +5,8 @@ import React from 'react';
 import {
   View, StyleSheet, Button, Text, StatusBar, Image,
 } from 'react-native';
-// import * as Google from 'expo-google-app-auth';
-// import config from '../../../config';
+import * as Google from 'expo-google-app-auth';
+import config from '../../../config';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
 });
-
 
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
@@ -68,4 +67,4 @@ export default function LoginScreen({ navigation: { navigate } }) {
       </View>
     </View>
   );
-  }
+}

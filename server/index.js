@@ -1,9 +1,17 @@
 const express = require('express');
+const { Client } = require('pg');
 const { sequelize } = require('./db/index');
 
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
+// const connectionString = process.env.CONNECTION_STRING;
+
+const db = new Client({
+  connectionString: 'postgres://eewfrwfm:vbozuse9S9WUXM9uCpBzqWhzmyItP1_v@suleiman.db.elephantsql.com:5432/eewfrwfm',
+});
+
+db.connect().then(() => console.warn('connected')).catch((err) => console.warn(err));
 
 async function assertDatabaseConnectionOk() {
   try {
