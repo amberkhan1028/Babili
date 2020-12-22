@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "start": "nodemon server/index.js"
+    "start": "nodemon server/index.js",
+    "drop-db:local": "psql -U postgres -d postgres -p 5432 -f /tmp/drop_create_db.sql"
   },
   "husky": {
     "hooks": {
@@ -34,10 +35,10 @@
     "axios": "^0.21.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
     "expo": "~40.0.0",
     "expo-constants": "^9.3.5",
     "expo-document-picker": "~8.4.1",
+    "expo-facebook": "~9.1.0",
     "expo-google-app-auth": "^8.1.4",
     "expo-google-sign-in": "^8.4.0",
     "expo-image-picker": "~9.2.0",
@@ -49,18 +50,21 @@
     "native-base": "^2.15.0",
     "path": "^0.12.7",
     "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
     "prop-types": "^15.7.2",
     "pusher": "^4.0.2",
     "pusher-js": "^7.0.2",
     "react": "^16.14.0",
     "react-dom": "16.13.1",
     "react-hook-form": "^6.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.0.tar.gz",
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
+    "react-native-config": "^1.4.1",
     "react-native-cli": "^2.0.1",
     "react-native-dialogflow": "^3.2.2",
     "react-native-dotenv": "^2.4.3",
     "react-native-elements": "^3.0.1",
+    "react-native-fbsdk": "^3.0.0",
     "react-native-flip-card": "^3.5.6",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-gifted-chat": "^0.16.3",
@@ -78,6 +82,7 @@
     "sequelize": "^6.3.5",
     "stream-chat": "^2.10.0",
     "stream-chat-expo": "^2.1.1",
+    "dotenv": "^8.2.0",
     "watchman": "^1.0.0"
   },
   "devDependencies": {
