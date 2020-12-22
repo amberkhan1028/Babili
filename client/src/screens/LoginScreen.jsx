@@ -2,20 +2,16 @@
 /* eslint-disable react/prop-types */
 import 'react-native-gesture-handler';
 import React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import {
+  View, StyleSheet, Button, Text, StatusBar, Image,
+} from 'react-native';
 import * as Google from 'expo-google-app-auth';
-import { GOOGLE_IOS, GOOGLE_ANDROID } from 'react-native-dotenv';
+import config from '../../../config';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fec857',
-  },
-  googleContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   logo: {
     width: 200,
@@ -34,16 +30,15 @@ const styles = StyleSheet.create({
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
-      const { type, accessToken, user } = await Google.logInAsync({
+      const { type, user } = await Google.logInAsync({
         behavior: 'web',
-        iosClientId: GOOGLE_IOS,
-        androidClientId: GOOGLE_ANDROID,
+        iosClientId: config.GOOGLE_IOS,
+        // androidClientId: config.GOOGLE_ANDROID,
         scopes: ['profile', 'email'],
       });
-
       if (type === 'success') {
-        alert(user);
-        navigate('Messages');
+        alert(user.name, user.email);
+        navigate('Home');
       }
       return { cancelled: true };
     } catch (e) {
@@ -51,13 +46,25 @@ export default function LoginScreen({ navigation: { navigate } }) {
       return { error: true };
     }
   }
+
   const signInWithGoogle = () => {
     signInWithGoogleAsync();
   };
 
   return (
     <View style={styles.container}>
-      <Button onPress={() => signInWithGoogle()} title="Sign in with Google" />
+      <StatusBar
+        barStyle="dark-content"
+      />
+      <View style={styles.logoContainer}>
+        <Text style={styles.title}>babili</Text>
+        <Image
+          style={styles.logo}
+        // eslint-disable-next-line global-require
+          source={require('../../assets/logo.png')}
+        />
+        <Button onPress={() => signInWithGoogle()} title="Sign in with Google" />
+      </View>
     </View>
   );
 }
