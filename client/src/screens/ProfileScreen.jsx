@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+// eslint-disable-next-line import/no-unresolved
 import { useForm, Controller } from 'react-hook-form';
 import {
   View, Text, TextInput, StyleSheet, StatusBar, Button,
