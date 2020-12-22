@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -20,7 +21,6 @@ const AppStack = createBottomTabNavigator({
   Profile: ProfileScreen,
 }, {
   defaultNavigationOptions: ({ navigation }) => ({
-    // eslint-disable-next-line react/prop-types
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;
       let iconName;
@@ -49,12 +49,13 @@ const AppStack = createBottomTabNavigator({
 });
 
 const navigator = createStackNavigator({
+  Messages: MessagesScreen,
   Login: LoginScreen,
   FlashCard: FlashCardScreen,
   Matching: MatchingGameScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Login',
   defaultNavigationOptions: {
     title: 'babili',
   },
