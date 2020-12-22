@@ -1,16 +1,31 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-// import { SearchBar } from 'react-native-elements';
+import { View, Text, StyleSheet,
+} from 'react-native';
+import SearchBar from 'react-native-search-bar';
 
+import FriendSideBar from '../components/FriendSideBar';
+import FriendChat from '../components/FriendChat';
+import TopFriends from '../components/TopFriends';
+
+const styles = StyleSheet.create({
+  chatWrapper: {
+  //  flex: 1,
+    flexDirection: 'column',
+  },
+});
 const FriendsScreen = () => (
   <View>
-    <Text>Friends</Text>
-    {/* <SearchBar
+    <View>
+      <TopFriends />
+    </View>
+    <SearchBar
       placeholder="search for friends"
-    /> */}
+    />
+    <View style={styles.chatWrapper}>
+      <FriendSideBar />
+      <FriendChat />
+    </View>
   </View>
 );
-
-// const styles = StyleSheet.create({});
 
 export default FriendsScreen;

@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useForm, Controller } from 'react-hook-form';
 import {
-  View, Text, TextInput, StyleSheet, StatusBar, Button,
+  View, Text, TextInput, StyleSheet, StatusBar, Button, Image,
 } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
+    paddingTop: 20,
     backgroundColor: '#F5FCFF',
     padding: 20,
   },
@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
     fontWeight: 'bold',
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 400 / 2,
+    alignSelf: 'center',
   },
   textInput: {
     borderColor: '#CCCCCC',
@@ -70,6 +76,12 @@ const ProfileScreen = () => {
         {' '}
         User Profile
       </Text>
+      <Image
+        source={{
+          uri: 'https://i.redd.it/v0caqchbtn741.jpg',
+        }}
+        style={styles.image}
+      />
       <Text>Skill Level:</Text>
       <View
         style={styles.inputContainer}
