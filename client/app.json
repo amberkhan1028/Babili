@@ -5,6 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "facebookScheme": "fb172606111272117",
+    "facebookAppId": "172606111272117",
+    "facebookDisplayName":"babili",
+    "facebookAutoInitEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
