@@ -1,13 +1,10 @@
+/* eslint-disable no-alert */
+/* eslint-disable react/prop-types */
+import 'react-native-gesture-handler';
 import React from 'react';
-import PropTypes from 'prop-types';
-import {
-  View, Text, StyleSheet, Image, StatusBar, Button,
-} from 'react-native';
-
+import { View, StyleSheet, Button } from 'react-native';
 import * as Google from 'expo-google-app-auth';
-
-const IOS_CLIENT_ID = '932033800797-qipd3i832qgt56rksik1f11p9ia02djm.apps.googleusercontent.com';
-const ANDROID_CLIENT_ID = '932033800797-hbdmbb02jkmg5tv62opqcbasd3esob9b.apps.googleusercontent.com';
+import { GOOGLE_IOS, GOOGLE_ANDROID } from 'react-native-dotenv';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,49 +31,33 @@ const styles = StyleSheet.create({
   },
 });
 
-const LoginScreen = ({ navigation }) => {
-  const signInWithGoogle = async () => {
+export default function LoginScreen({ navigation: { navigate } }) {
+  async function signInWithGoogleAsync() {
     try {
-      const result = await Google.logInAsync({
-        iosClientId: IOS_CLIENT_ID,
-        androidClientId: ANDROID_CLIENT_ID,
+      const { type, accessToken, user } = await Google.logInAsync({
+        behavior: 'web',
+        iosClientId: GOOGLE_IOS,
+        androidClientId: GOOGLE_ANDROID,
         scopes: ['profile', 'email'],
       });
 
-      if (result.type === 'success') {
-        console.warn('LoginScreen.js.js 21 | ', result.user.givenName);
-        navigation.navigate('MatchingGameScreen');
-        return result.accessToken;
+      if (type === 'success') {
+        alert(user);
+        navigate('Messages');
       }
       return { cancelled: true };
     } catch (e) {
-      console.warn('LoginScreen.js.js 30 | Error with login', e);
+      alert('something went wrong :(');
       return { error: true };
     }
+  }
+  const signInWithGoogle = () => {
+    signInWithGoogleAsync();
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-      />
-      <View style={styles.logoContainer}>
-        <Text style={styles.title}>babili</Text>
-        <Image
-          style={styles.logo}
-          // eslint-disable-next-line global-require
-          source={require('../../assets/logo.png')}
-        />
-      </View>
-      <Button title="Login with Google" onPress={signInWithGoogle} />
+      <Button onPress={() => signInWithGoogle()} title="Sign in with Google" />
     </View>
   );
-};
-
-LoginScreen.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-export default LoginScreen;
+}

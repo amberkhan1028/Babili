@@ -47,11 +47,12 @@ const AppStack = createBottomTabNavigator({
 });
 
 const navigator = createStackNavigator({
+  Messages: MessagesScreen,
   Login: LoginScreen,
   Matching: MatchingGameScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Login',
   defaultNavigationOptions: {
     title: 'babili',
   },
