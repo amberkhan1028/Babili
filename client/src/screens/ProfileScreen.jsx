@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 45,
     backgroundColor: '#F5FCFF',
+    padding: 20,
   },
   header: {
     fontSize: 25,
@@ -58,6 +59,7 @@ const ProfileScreen = () => {
   }, []);
 
   return (
+
     <View style={styles.container}>
       <StatusBar
         barStyle="dark-content"
