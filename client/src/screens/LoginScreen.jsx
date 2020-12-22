@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
   },
 });
 
+const LoginScreen = () => (
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
