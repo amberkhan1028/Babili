@@ -3,22 +3,31 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 58ea909c1f05f6db1966bde4475d3459bb14607b
 import LoginScreen from './src/screens/LoginScreen';
 import MatchingGameScreen from './src/screens/MatchingGameScreen';
 import CameraScreen from './src/screens/CameraScreen';
 import FriendsScreen from './src/screens/FriendsScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import FlashCardScreen from './src/screens/FlashCardScreen';
+import FlashCardOrMatchingScreen from './src/screens/FlashCardOrMatchingScreen';
 
 const AppStack = createBottomTabNavigator({
   Messages: MessagesScreen,
   Friends: FriendsScreen,
   Camera: CameraScreen,
-  Games: MatchingGameScreen,
+  Games: FlashCardOrMatchingScreen,
   Profile: ProfileScreen,
 }, {
   defaultNavigationOptions: ({ navigation }) => ({
+<<<<<<< HEAD
+=======
+    // eslint-disable-next-line react/prop-types
+>>>>>>> 58ea909c1f05f6db1966bde4475d3459bb14607b
     tabBarIcon: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;
       let iconName;
@@ -48,6 +57,7 @@ const AppStack = createBottomTabNavigator({
 
 const navigator = createStackNavigator({
   Login: LoginScreen,
+  FlashCard: FlashCardScreen,
   Matching: MatchingGameScreen,
   Home: AppStack,
 }, {
