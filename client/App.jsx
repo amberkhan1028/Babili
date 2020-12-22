@@ -55,7 +55,7 @@ const navigator = createStackNavigator({
   Matching: MatchingGameScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Login',
+  initialRouteName: 'Home',
   defaultNavigationOptions: {
     title: 'babili',
   },
