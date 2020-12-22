@@ -3,6 +3,7 @@
     "name": "Babili",
     "slug": "Babili",
     "version": "1.0.0",
+    "sdkVersion": "17.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "facebookScheme": "fb172606111272117",
@@ -21,7 +22,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.webiosandroid.all",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId":"com.googleusercontent.apps.932033800797-s1b7kgmub6mjb67v5sen9jb861eh2lc2"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
