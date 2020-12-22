@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   },
 });
 
-<<<<<<< HEAD
 const ProfileScreen = () => {
   // const [country, setCountry] = useState('');
   const {
@@ -121,8 +120,6 @@ const ProfileScreen = () => {
     </View>
   );
 };
-=======
 // const styles = StyleSheet.create({});
->>>>>>> 58ea909c1f05f6db1966bde4475d3459bb14607b
 
 export default ProfileScreen;
