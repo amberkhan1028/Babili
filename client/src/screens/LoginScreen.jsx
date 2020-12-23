@@ -33,16 +33,16 @@ export default function LoginScreen({ navigation: { navigate } }) {
       const { type, user } = await Google.logInAsync({
         behavior: 'web',
         iosClientId: config.GOOGLE_IOS,
-        // androidClientId: config.GOOGLE_ANDROID,
+        // androidClientId: config.GOOGLE_ANDROID, // need to make new credit
         scopes: ['profile', 'email'],
       });
       if (type === 'success') {
-        alert(user.name, user.email);
+        alert(user.name);
         navigate('Home');
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(');
+      alert('something went wrong :(', e);
       return { error: true };
     }
   }
