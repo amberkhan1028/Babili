@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  View, Text, TouchableOpacity, Image, StyleSheet,
+  View, TouchableOpacity, Image, StyleSheet,
 } from 'react-native';
 
 const styles = StyleSheet.create({

@@ -1,11 +1,10 @@
 import React from 'react';
 import {
-  View, Text, TouchableOpacity, Image, StyleSheet,
+  View, Image, StyleSheet,
 } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     width: 400,
     height: 80,
     backgroundColor: '#fec857',
@@ -16,7 +15,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 400 / 2,
-    // margin: 10,
+    margin: 5,
   },
 });
 

@@ -1,9 +1,8 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, StatusBar, TextInput,
+  View, StyleSheet, StatusBar, TextInput,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import FriendSideBar from '../components/FriendSideBar';
 import FriendChat from '../components/FriendChat';
 import TopFriends from '../components/TopFriends';
@@ -26,6 +25,7 @@ const styles = StyleSheet.create({
   },
 });
 const FriendsScreen = () => {
+  // eslint-disable-next-line no-unused-vars
   const [friendLists, setFriendLists] = React.useState([
     { id: 1, name: 'Friend1', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
     { id: 2, name: 'Friend2', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
@@ -43,11 +43,12 @@ const FriendsScreen = () => {
       />
       <View>
         <TopFriends />
-        {/* <AntDesign name="search1" size={20} color="black" /> */}
         <TextInput
           style={styles.searchBar}
           placeholder=" search for people"
-        />
+        >
+          <AntDesign name="search1" size={20} color="#147EFB" />
+        </TextInput>
       </View>
       <View style={styles.chatWrapper}>
         <FriendSideBar friendLists={friendLists} onFriendPress={onFriendPressHandler} />
