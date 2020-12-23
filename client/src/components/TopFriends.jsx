@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     width: 400,
     height: 80,
     backgroundColor: '#fec857',
+    flexDirection: 'row',
 
   },
   image: {

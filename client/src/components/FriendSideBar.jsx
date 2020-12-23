@@ -19,20 +19,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const FriendSideBar = () => (
+const FriendSideBar = ({ friendLists, onFriendPress }) => (
   <View style={styles.container}>
-    <Image
-      source={{
-        uri: 'https://i.redd.it/v0caqchbtn741.jpg',
-      }}
-      style={styles.image}
-    />
-    <Image
-      source={{
-        uri: 'https://i.redd.it/v0caqchbtn741.jpg',
-      }}
-      style={styles.image}
-    />
+    {(friendLists && friendLists.length > 0)
+    && friendLists.map((friend) => (
+      <TouchableOpacity onPress={() => onFriendPress(friend)}>
+
+        <Image
+          source={{
+            uri: friend.img,
+          }}
+          style={styles.image}
+        />
+      </TouchableOpacity>
+
+    ))}
   </View>
 );
 

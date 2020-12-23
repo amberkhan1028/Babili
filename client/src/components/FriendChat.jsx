@@ -11,9 +11,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const FriendChat = () => (
+const FriendChat = ({ currentFriend }) => (
   <View style={styles.container}>
     <Text>Friend Chat</Text>
+    {currentFriend && (<Text>{currentFriend.name}</Text>)}
   </View>
 );
 
