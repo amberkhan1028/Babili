@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import FlipCard from 'react-native-flip-card';
@@ -93,13 +94,14 @@ export default function Card({ card }) {
           light
           style={styles.starTitle}
           onPress={() => {
-            Alert.alert('word saved!');
+            Alert.alert(`Saved ${card.hwi.hw.toUpperCase()} to your word bank!`);
           }}
         />
         <Text style={styles.termText}>
-          { card.shortdef[0].split(',')
+          { card.shortdef[0] && card.shortdef[0].split(',')
             ? card.shortdef[0].split(',')[0]
-            : card.shortdef[0] }
+            : card.shortdef ? card.shortdef[0]
+              : 'No translation found' }
         </Text>
       </View>
     </FlipCard>

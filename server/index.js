@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 const express = require('express');
 const { Client } = require('pg');
-const { sequelize } = require('./db/index');
 
 const app = express();
 app.use(express.json());
