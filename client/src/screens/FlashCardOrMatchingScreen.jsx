@@ -5,13 +5,11 @@ import {
 
 const styles = StyleSheet.create({
   topButton: {
-    width: 370,
-    height: 320,
+    flex: 1,
     justifyContent: 'center',
   },
   bottomButton: {
-    width: 375,
-    height: 340,
+    flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ffc857',
   },
@@ -24,7 +22,7 @@ const styles = StyleSheet.create({
 
 // eslint-disable-next-line react/prop-types
 const FlashCardOrMatchingScreen = ({ navigation: { navigate } }) => (
-  <View style={styles.app}>
+  <View style={{ flex: 1 }}>
     <StatusBar
       barStyle="dark-content"
     />

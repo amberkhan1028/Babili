@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const express = require('express');
 const { Client } = require('pg');
 const { sequelize } = require('./db/index');
@@ -5,13 +6,27 @@ const { sequelize } = require('./db/index');
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
-// const connectionString = process.env.CONNECTION_STRING;
+const connectionString = process.env.CONNECTION_STRING;
 
 const db = new Client({
-  connectionString: 'postgres://eewfrwfm:vbozuse9S9WUXM9uCpBzqWhzmyItP1_v@suleiman.db.elephantsql.com:5432/eewfrwfm',
+  connectionString,
 });
 
-db.connect().then(() => console.warn('connected')).catch((err) => console.warn(err));
+// db.connect().then(() => { console.warn('connected');}).catch((err) => console.warn(err));
+
+async function connect() {
+  try {
+    await db.connect();
+    console.warn('connected');
+    const { rows } = await db.query('SELECT * FROM Users');
+    console.table(rows);
+    await db.end();
+  } catch (error) {
+    console.warn('Unable to connect to the database:');
+    console.warn(error.message);
+    process.exit(1);
+  }
+}
 
 async function assertDatabaseConnectionOk() {
   try {
@@ -26,6 +41,7 @@ async function assertDatabaseConnectionOk() {
 
 async function init() {
   await assertDatabaseConnectionOk();
+  await connect();
 
   console.warn(`Starting Sequelize + Express on port ${PORT}...`);
 
