@@ -31,9 +31,8 @@ export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
       const { type, user } = await Google.logInAsync({
-        behavior: 'web',
+        androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
-        // androidClientId: config.GOOGLE_ANDROID, // need to make new credit
         scopes: ['profile', 'email'],
       });
       if (type === 'success') {
