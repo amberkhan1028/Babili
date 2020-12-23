@@ -56,6 +56,7 @@
     "prop-types": "^15.7.2",
     "pusher": "^4.0.2",
     "pusher-js": "^7.0.2",
+    "random-words": "^1.1.1",
     "react": "^16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.0.tar.gz",

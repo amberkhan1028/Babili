@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
@@ -42,15 +42,26 @@ export default function MessagesScreen() {
     setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
   }, []);
 
+  const renderBubble = (props) => (
+    <Bubble
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+      wrapperStyle={{
+        right: {
+          backgroundColor: '#0f9535',
+        },
+      }}
+    />
+  );
+
   return (
     <GiftedChat
       messages={messages}
       onSend={(messages) => onSend(messages)}
       user={{
         _id: 1,
-        name: 'Aiesha',
-        avatar: 'https://www.kindpng.com/picc/m/163-1636340_user-avatar-icon-avatar-transparent-user-icon-png.png',
       }}
+      renderBubble={renderBubble}
     />
   );
 }
