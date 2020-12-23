@@ -67,6 +67,7 @@
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
     "react-native-cli": "^2.0.1",
     "react-native-config": "^1.4.1",
+    "react-native-dialogflow-text": "0.0.1",
     "react-native-dotenv": "^2.4.3",
     "react-native-elements": "^3.0.1",
     "react-native-fbsdk": "^3.0.0",
@@ -86,6 +87,8 @@
     "react-navigation-tabs": "^2.10.1",
     "regenerator-runtime": "^0.13.7",
     "sequelize": "^6.3.5",
+    "stream-chat": "^2.10.0",
+    "stream-chat-expo": "^2.1.1",
     "watchman": "^1.0.0"
   },
   "devDependencies": {

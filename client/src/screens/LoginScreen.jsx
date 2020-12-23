@@ -31,18 +31,17 @@ export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
       const { type, user } = await Google.logInAsync({
-        behavior: 'web',
+        androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
-        // androidClientId: config.GOOGLE_ANDROID,
         scopes: ['profile', 'email'],
       });
       if (type === 'success') {
-        alert(user.name, user.email);
+        alert(user.name);
         navigate('Home');
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(');
+      alert('something went wrong :(', e);
       return { error: true };
     }
   }
