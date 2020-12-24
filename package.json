@@ -7,8 +7,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "start": "nodemon server/index.js",
-    "drop-db:local": "psql -U postgres -d postgres -p 5432 -f /tmp/drop_create_db.sql",
-    "build": "expo build"
+    "drop-db:local": "psql -U postgres -d postgres -p 5432 -f /tmp/drop_create_db.sql"
   },
   "husky": {
     "hooks": {
