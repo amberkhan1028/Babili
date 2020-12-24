@@ -59,7 +59,7 @@ const navigator = createStackNavigator({
   Object: ObjectDetectionScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Login',
+  initialRouteName: 'Home',
   defaultNavigationOptions: {
     title: 'babili',
   },
