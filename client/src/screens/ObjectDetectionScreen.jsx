@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingTop: 15,
-    paddingRight: 30,
+    paddingRight: 20,
   },
   camera: {
     width: 700 / 2,
