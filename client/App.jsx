@@ -6,17 +6,19 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import LoginScreen from './src/screens/LoginScreen';
 import MatchingGameScreen from './src/screens/MatchingGameScreen';
-import CameraScreen from './src/screens/CameraScreen';
+import ObjectOrDocScreen from './src/screens/ObjectOrDocScreen';
 import FriendsScreen from './src/screens/FriendsScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import FlashCardScreen from './src/screens/FlashCardScreen';
 import FlashCardOrMatchingScreen from './src/screens/FlashCardOrMatchingScreen';
+import ObjectDetectionScreen from './src/screens/ObjectDetectionScreen';
+import DocumentScreen from './src/screens/DocumentScreen';
 
 const AppStack = createBottomTabNavigator({
   Messages: MessagesScreen,
   Friends: FriendsScreen,
-  Camera: CameraScreen,
+  Camera: ObjectOrDocScreen,
   Games: FlashCardOrMatchingScreen,
   Profile: ProfileScreen,
 }, {
@@ -53,6 +55,8 @@ const navigator = createStackNavigator({
   Login: LoginScreen,
   FlashCard: FlashCardScreen,
   Matching: MatchingGameScreen,
+  Document: DocumentScreen,
+  Object: ObjectDetectionScreen,
   Home: AppStack,
 }, {
   initialRouteName: 'Login',

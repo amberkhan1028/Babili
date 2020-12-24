@@ -30,18 +30,20 @@ const styles = StyleSheet.create({
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
-      const { type, user } = await Google.logInAsync({
+      const { type } = await Google.logInAsync({
         androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
         scopes: ['profile', 'email'],
+        permissions: ['public_profile', 'email', 'gender', 'location'],
+        androidStandaloneAppClientId: config.GOOGLE_AND,
+
       });
       if (type === 'success') {
-        alert(user.name);
         navigate('Home');
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(', e);
+      alert('something went wrong :(');
       return { error: true };
     }
   }
