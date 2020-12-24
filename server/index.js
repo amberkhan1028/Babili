@@ -3,9 +3,11 @@
 const express = require('express');
 const { Client } = require('pg');
 const { sequelize } = require('./db/index');
+const wordbank = require('./db/Routes/wordBank');
 
 const app = express();
 app.use(express.json());
+app.use('/', wordbank);
 const PORT = process.env.PORT || 3000;
 const connectionString = process.env.CONNECTION_STRING;
 const db = new Client({
@@ -32,3 +34,7 @@ async function init() {
   });
 }
 init();
+
+module.exports = {
+  db,
+};

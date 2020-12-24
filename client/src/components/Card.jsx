@@ -7,7 +7,10 @@ import {
   StyleSheet, Text, View, Alert,
 } from 'react-native';
 
+import axios from 'axios';
+
 import * as Speech from 'expo-speech';
+import config from '../../../config';
 
 const styles = StyleSheet.create({
   container: {
@@ -93,7 +96,8 @@ export default function Card({ card }) {
           name="star"
           light
           style={styles.starTitle}
-          onPress={() => {
+          onPress={async () => {
+            await axios.post(`${config.BASE_URL}/wordbank`, { nativeterm: card.shortdef, engterm: card.hwi.hw.toUpperCase() });
             Alert.alert(`Saved ${card.hwi.hw.toUpperCase()} to your word bank!`);
           }}
         />
