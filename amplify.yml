@@ -7,7 +7,7 @@ frontend:
     # IMPORTANT - Please verify your build commands
     build:
       commands:
-        - expo start
+        - npm run dev
   artifacts:
     # IMPORTANT - Please verify your build output directory
     baseDirectory: /
