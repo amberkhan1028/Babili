@@ -27,28 +27,6 @@ const FlashCardScreen = () => {
       <ScrollView>
         {
         flashCards.sort(() => 0.5 - Math.random()).map((card) => (
-          // console.log(card);
-          // return (
-          //   <View key={card.meta.id}>
-          //     <Card>
-          //       <Card.Title>{ card.hwi && card.hwi.hw.toUpperCase() }</Card.Title>
-          //       <Card.Divider />
-          //       <Card.Image source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg' }}>
-          //         <Text style={{ marginBottom: 10 }}>
-          //           { `${card.fl}:`}
-          //         </Text>
-          //         <Button
-          //           icon={<Icon name="code" color="#ffffff" />}
-          //           buttonStyle={{
-          //             borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,
-          //           }}
-          //           title="Flip"
-          //         />
-          //       </Card.Image>
-          //     </Card>
-          //   </View>
-
-          // );
           <Cards
             card={card}
           />
