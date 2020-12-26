@@ -21,15 +21,6 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.webiosandroid.all",
-      "config": {
-        "googleSignIn": {
-          "reservedClientId":"com.googleusercontent.apps.932033800797-s1b7kgmub6mjb67v5sen9jb861eh2lc2"
-        }
-      }
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
