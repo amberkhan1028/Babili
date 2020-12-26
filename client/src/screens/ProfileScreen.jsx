@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useForm, Controller } from 'react-hook-form';
+import axios from 'axios';
 import {
   View, Text, TextInput, StyleSheet, StatusBar, Button, Image,
 } from 'react-native';
+import config from '../../../config';
 
 const styles = StyleSheet.create({
   container: {
@@ -38,26 +41,29 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileScreen = () => {
-  // const [country, setCountry] = useState('');
-  const {
-    handleSubmit, control, errors, setValue,
-  } = useForm();
-  const onSubmit = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data, 'data');
+const ProfileScreen = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  const fetchUser = () => {
+    axios.get(
+      `${config.BASE_URL}/user/`,
+    ).then((res) => setUserInfo(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/users/1',
-      );
-      const { address } = await response.json();
-      setValue('address.city', address.city);
-    } catch (error) {
-      console.warn(error);
-    }
+  const updateUser = (data) => {
+    axios.patch(
+      `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
+  };
+
+  const {
+    handleSubmit, control,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    updateUser(data);
   };
 
   useEffect(() => {
@@ -88,14 +94,14 @@ const ProfileScreen = () => {
       >
         <Text>Country of origin:</Text>
         <Controller
-          name="address.city"
+          name="country"
           control={control}
           render={({ onChange, value }) => (
             <TextInput
               onChangeText={(text) => onChange(text)}
               value={value}
               placeholder="insert country here"
-              defaultValue=""
+              defaultValue={userInfo && userInfo.country}
               style={styles.textInput}
             />
           )}
@@ -118,7 +124,7 @@ const ProfileScreen = () => {
         <Button onPress={handleSubmit(onSubmit)} title="submit" />
         <Text>About me:</Text>
         <Controller
-          name="description"
+          name="aboutme"
           control={control}
           render={({ onChange, value }) => (
             <TextInput
