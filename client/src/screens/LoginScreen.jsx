@@ -61,9 +61,10 @@ export default function LoginScreen({ navigation: { navigate } }) {
               email: user.email,
             };
 
-            axios.post(`${config.BASE_URL}/user`, postData).then(() => navigate('Home', {
-              email: user.email,
-            }));
+            axios.post(`${config.BASE_URL}/user`, postData)
+              .then(() => navigate('Home', {
+                email: user.email,
+              }));
             console.warn(err);
           });
       }
