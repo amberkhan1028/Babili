@@ -9,12 +9,10 @@ const connectionString = process.env.CONNECTION_STRING;
 const db = new Client({
   connectionString,
 });
-
 // establish DB connections
 db.connect()
   .then(() => console.warn('db connected !! :^)'))
   .catch((e) => console.warn(`unable to connect to db: ${e.message}`));
-
 // get all users
 router.get('/user', async (req, res) => {
   try {
@@ -27,7 +25,6 @@ router.get('/user', async (req, res) => {
     });
   }
 });
-
 // add user
 router.post('/user', async (req, res) => {
   try {
@@ -39,7 +36,6 @@ router.post('/user', async (req, res) => {
     res.status(400).send({ error: true, message: e.message });
   }
 });
-
 // get a specific user
 router.get('/user/:email', async (req, res) => {
   const { email } = req.params;
@@ -48,7 +44,6 @@ router.get('/user/:email', async (req, res) => {
   if (rowCount > 0) return res.status(200).send(rows[0]);
   res.status(404).send({ error: true, message: 'user with given email not found' });
 });
-
 // finds a user based on email and update their profile info
 router.patch('/user/:email', async (req, res) => {
   const { email } = req.params;
@@ -72,5 +67,4 @@ router.patch('/user/:email', async (req, res) => {
     res.status(404).send({ error: true, message: 'user with given email not found' });
   }
 });
-
 module.exports = router;
