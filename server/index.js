@@ -42,8 +42,8 @@ async function connect() {
   }
 }
 async function init() {
-  // await connect();
-  // require('./db/Routes/user')(app, db);
+  await connect();
+  // require('./Routes/user')(app, db);
   console.warn(`Starting Sequelize + Express on port ${PORT}...`);
   app.listen(PORT, () => {
     console.warn(`Express server started on port ${PORT}.`);
