@@ -6,8 +6,8 @@ import {
   DIALOG_FLOW_CLIENT_EMAIL,
   DIALOG_FLOW_PRIVATE_KEY,
   DIALOG_FLOW_PROJECT_ID,
-  BASE_URL,
   OCR,
+  BASE_URL,
 } from '@env';
 
 export default {

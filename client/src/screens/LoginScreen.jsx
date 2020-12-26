@@ -6,6 +6,7 @@ import {
   View, StyleSheet, Button, Text, StatusBar, Image,
 } from 'react-native';
 import * as Google from 'expo-google-app-auth';
+import axios from 'axios';
 import config from '../../../config';
 
 const styles = StyleSheet.create({
@@ -26,32 +27,35 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
 });
-
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
-      const { type } = await Google.logInAsync({
+      const { type, user } = await Google.logInAsync({
         androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
         scopes: ['profile', 'email'],
         permissions: ['public_profile', 'email', 'gender', 'location'],
         androidStandaloneAppClientId: config.GOOGLE_AND,
-
       });
       if (type === 'success') {
-        navigate('Home');
+        console.warn(config.BASE_URL);
+        await axios.post(`${config.BASE_URL}/user`, JSON.stringify({
+          email: user.email,
+          name: user.name,
+          photoUrl: user.photoUrl,
+        }));
+        navigate('Home', { email: user.email });
+        return alert('successful login');
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(');
+      alert('something went wrong :(', e);
       return { error: true };
     }
   }
-
   const signInWithGoogle = () => {
     signInWithGoogleAsync();
   };
-
   return (
     <View style={styles.container}>
       <StatusBar
