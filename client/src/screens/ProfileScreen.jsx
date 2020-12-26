@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-unresolved
 import { useForm, Controller } from 'react-hook-form';
@@ -6,6 +7,7 @@ import {
   View, Text, TextInput, StyleSheet, StatusBar, Button, Image,
 } from 'react-native';
 import config from '../../../config';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -38,31 +40,38 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
 });
-const ProfileScreen = ({navigation}) => {
+
+const ProfileScreen = ({ navigation }) => {
   const [userInfo, setUserInfo] = useState(null);
+
   const fetchUser = () => {
     axios.get(
       `${config.BASE_URL}/user/`,
     ).then((res) => setUserInfo(res.data))
-      .catch((e) => alert(e.message));
+      .catch((e) => console.warn(e.message));
   };
-  const updateUser = (data)=>{
+
+  const updateUser = (data) => {
     axios.patch(
-      `${config.BASE_URL}/user/${navigation.getParam('email')}`, data
-    ).then((res) => alert(res.data))
-      .catch((e) => alert(e.message));
-  }
+      `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
+  };
+
   const {
-    handleSubmit, control, errors, setValue,
+    handleSubmit, control,
   } = useForm();
+
   const onSubmit = (data) => {
-    console.log(data, 'data');
     updateUser(data);
   };
+
   useEffect(() => {
     fetchUser();
   }, []);
+
   return (
+
     <View style={styles.container}>
       <StatusBar
         barStyle="dark-content"
@@ -92,7 +101,7 @@ const ProfileScreen = ({navigation}) => {
               onChangeText={(text) => onChange(text)}
               value={value}
               placeholder="insert country here"
-              defaultValue={userInfo?.country}
+              defaultValue={userInfo && userInfo.country}
               style={styles.textInput}
             />
           )}
@@ -132,4 +141,6 @@ const ProfileScreen = ({navigation}) => {
     </View>
   );
 };
+// const styles = StyleSheet.create({});
+
 export default ProfileScreen;

@@ -4,10 +4,10 @@ import {
   GOOGLE_AND,
   GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
+  BASE_URL,
   DIALOG_FLOW_PRIVATE_KEY,
   DIALOG_FLOW_PROJECT_ID,
   OCR,
-  BASE_URL,
 } from '@env';
 
 export default {

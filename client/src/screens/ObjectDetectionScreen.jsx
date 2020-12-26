@@ -107,7 +107,8 @@
 
 //   const TensorCamera = cameraWithTensors(Camera);
 //   let requestAnimationFrameId = 0;
-//   const textureDims = Platform.OS === 'ios' ? { width: 1080, height: 1920 } : { width: 1600, height: 1200 };
+//   const textureDims = Platform.OS === 'ios' ?
+// { width: 1080, height: 1920 } : { width: 1600, height: 1200 };
 //   const tensorDims = { width: 152, height: 200 };
 //   const loadMobileNetModel = async () => {
 //     const model = await mobilenet.load();
@@ -137,7 +138,9 @@
 
 //   const getTranslation = async (className) => {
 //     try {
-//       const googleTranslateApiEndpoint = `${GoogleTranslateAPI}?q=${className}&target=${language}&format=html&source=en&model=nmt&key=${GoogleAPIKey}`;
+//       const googleTranslateApiEndpoint =
+// `${GoogleTranslateAPI}?q=${className}
+// &target=${language}&format=html&source=en&model=nmt&key=${GoogleAPIKey}`;
 
 //       const apiCall = await fetch(googleTranslateApiEndpoint);
 //       if (!apiCall) {
@@ -157,7 +160,8 @@
 //       setTranslation(response.data.translations[0].translatedText);
 //       setWord(className);
 //     } catch (error) {
-//       console.error(`Error while attempting to get translation from Google API. Error: ${error}`);
+//       console.error
+// (`Error while attempting to get translation from Google API. Error: ${error}`);
 //       setTranslation('Cannot get translation at this time. Please try again later');
 //     }
 

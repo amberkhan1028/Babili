@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const { Router } = require('express');
 require('dotenv').config();
 
@@ -26,16 +27,14 @@ router.get('/user', async (req, res) => {
 });
 // add user
 router.post('/user', async (req, res) => {
-  // try {
-  console.warn(req);
-  res.send('hello');
-  // const insertOne = 'INSERT into users (email) VALUES ($1)';
-  // const { rowCount } = await db.query(insertOne, [email]);
-  // if (rowCount > 0) res.status(201)
-  // .send({ error: false, message: 'user added successfully!' });
-  // } catch (e) {
-  //  res.status(400).send({ error: true, message: e.message });
-//   }
+  try {
+    const { email } = req.body;
+    const insertOne = 'INSERT into users (email) VALUES ($1)';
+    const { rowCount } = await db.query(insertOne, [email]);
+    if (rowCount > 0) res.status(201).send({ error: false, message: 'user added successfully!' });
+  } catch (e) {
+    res.status(400).send({ error: true, message: e.message });
+  }
 });
 // get a specific user
 router.get('/user/:email', async (req, res) => {

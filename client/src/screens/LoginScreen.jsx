@@ -38,18 +38,36 @@ export default function LoginScreen({ navigation: { navigate } }) {
         androidStandaloneAppClientId: config.GOOGLE_AND,
       });
       if (type === 'success') {
-        console.warn(config.BASE_URL);
-        await axios.post(`${config.BASE_URL}/user`, JSON.stringify({
-          email: user.email,
-          name: user.name,
-          photoUrl: user.photoUrl,
-        }));
-        navigate('Home', { email: user.email });
-        return alert('successful login');
+        // const userData = {
+        //   email: user.email,
+        //   name: user.name,
+        //   id: user.id,
+        //   photoUrl: user.photoUrl,
+        //   accessToken,
+        // };
+
+        axios.get(`${config.BASE_URL}/user/${user.email}`)
+          .then((res) => {
+            // console.warn(res)
+            navigate('Home', {
+              email: res.data.email,
+            });
+          })
+          .catch((err) => {
+            // user not found, so create user
+            const postData = {
+              email: user.email,
+            };
+
+            axios.post(`${config.BASE_URL}/user`, postData).then(() => navigate('Home', {
+              email: user.email,
+            }));
+            console.warn(err);
+          });
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(', e);
+      console.warn('something went wrong :(', e);
       return { error: true };
     }
   }
