@@ -1,12 +1,17 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 // eslint-disable-next-line camelcase
+import firebase from 'firebase';
 import { Dialogflow_V2 } from 'react-native-dialogflow-text';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 import config from '../../../config';
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
 
   const BOT_USER = {
     _id: 2,
@@ -21,6 +26,9 @@ export default function MessagesScreen() {
       Dialogflow_V2.LANG_ENGLISH_US,
       config.DIALOG_FLOW_PROJECT_ID,
     );
+    setCurrentUser(firebase.auth().currentUser);
+    console.warn(currentUser);
+    registerForPushNotificationsAsync();
   });
 
   useEffect(() => {
@@ -33,6 +41,28 @@ export default function MessagesScreen() {
       },
     ]);
   }, []);
+
+  const registerForPushNotificationsAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS,
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') { // see if the user has already granted permission
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') { return; } // return if they don't grant permission
+    try {
+      // token that uniquely identifies this device
+      const token = await Notifications.getExpoPushTokenAsync();
+      firebase
+        .database()
+        .ref(`users/${currentUser.uid}/push_token`)
+        .set(token);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
 
   const sendBotResponse = (text) => {
     const msg = {
