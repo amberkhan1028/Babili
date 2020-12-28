@@ -136,7 +136,6 @@ export default function ObjectDetectionScreen() {
   const getTranslation = async (className) => {
     try {
       const googleTranslateApiEndpoint = `${GoogleTranslateAPI}?q=${className}&target=${language}&format=html&source=en&model=nmt&key=${GoogleAPIKey}`;
-
       const apiCall = await fetch(googleTranslateApiEndpoint);
       if (!apiCall) {
         console.error('Google API did not respond adequately. Review API call.');
@@ -158,7 +157,6 @@ export default function ObjectDetectionScreen() {
       console.error(`Error while attempting to get translation from Google API. Error: ${error}`);
       setTranslation('Cannot get translation at this time. Please try again later');
     }
-
     setTranslationAvailable(true);
   };
 
