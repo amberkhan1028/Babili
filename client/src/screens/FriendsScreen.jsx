@@ -20,8 +20,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 25,
     color: '#147EFB',
-    marginLeft: 100,
-    marginTop: 20,
+    margin: 20,
   },
 });
 const FriendsScreen = () => {
@@ -43,16 +42,18 @@ const FriendsScreen = () => {
       />
       <View>
         <TopFriends />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <View style={styles.chatWrapper}>
+          <FriendSideBar friendLists={friendLists} onFriendPress={onFriendPressHandler} />
+          <FriendChat currentFriend={currentFriend} />
+        </View>
         <TextInput
           style={styles.searchBar}
           placeholder=" search for people"
         >
           <AntDesign name="search1" size={20} color="#147EFB" />
         </TextInput>
-      </View>
-      <View style={styles.chatWrapper}>
-        <FriendSideBar friendLists={friendLists} onFriendPress={onFriendPressHandler} />
-        <FriendChat currentFriend={currentFriend} />
       </View>
     </View>
   );

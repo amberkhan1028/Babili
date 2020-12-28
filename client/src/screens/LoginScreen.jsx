@@ -6,6 +6,7 @@ import {
   View, StyleSheet, Button, Text, StatusBar, Image,
 } from 'react-native';
 import * as Google from 'expo-google-app-auth';
+import axios from 'axios';
 import config from '../../../config';
 
 const styles = StyleSheet.create({
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 export default function LoginScreen({ navigation: { navigate } }) {
   async function signInWithGoogleAsync() {
     try {
-      const { type } = await Google.logInAsync({
+      const { type, user } = await Google.logInAsync({
         androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
         scopes: ['profile', 'email'],
@@ -39,11 +40,37 @@ export default function LoginScreen({ navigation: { navigate } }) {
 
       });
       if (type === 'success') {
-        navigate('Home');
+        // const userData = {
+        //   email: user.email,
+        //   name: user.name,
+        //   id: user.id,
+        //   photoUrl: user.photoUrl,
+        //   accessToken,
+        // };
+
+        axios.get(`${config.BASE_URL}/user/${user.email}`)
+          .then((res) => {
+            // console.warn(res)
+            navigate('Home', {
+              email: res.data.email,
+            });
+          })
+          .catch((err) => {
+            // user not found, so create user
+            const postData = {
+              email: user.email,
+            };
+
+            axios.post(`${config.BASE_URL}/user`, postData)
+              .then(() => navigate('Home', {
+                email: user.email,
+              }));
+            console.warn(err);
+          });
       }
       return { cancelled: true };
     } catch (e) {
-      alert('something went wrong :(');
+      console.warn('something went wrong :(', e);
       return { error: true };
     }
   }

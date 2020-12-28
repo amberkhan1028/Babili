@@ -1,33 +1,37 @@
-import React, { useEffect } from 'react';
-// eslint-disable-next-line import/no-unresolved
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import axios from 'axios';
 import {
-  View, Text, TextInput, StyleSheet, StatusBar, Button, Image,
+  View, Text, TextInput, StyleSheet, StatusBar,
+  KeyboardAvoidingView, Image, TouchableOpacity, Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import config from '../../../config';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#F5FCFF',
-    padding: 20,
+    margin: 2,
+    backgroundColor: '#E8E8E8',
   },
   header: {
     fontSize: 25,
     textAlign: 'center',
     margin: 10,
     fontWeight: 'bold',
+    color: '#F42B03',
   },
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 400 / 2,
+    width: '50%',
+    height: '75%',
+    borderRadius: 80,
     alignSelf: 'center',
   },
   textInput: {
     borderColor: '#CCCCCC',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
     height: 25,
     fontSize: 14,
     paddingLeft: 20,
@@ -38,26 +42,29 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileScreen = () => {
-  // const [country, setCountry] = useState('');
-  const {
-    handleSubmit, control, errors, setValue,
-  } = useForm();
-  const onSubmit = (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data, 'data');
+const ProfileScreen = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  const fetchUser = () => {
+    axios.get(
+      `${config.BASE_URL}/user/`,
+    ).then((res) => setUserInfo(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/users/1',
-      );
-      const { address } = await response.json();
-      setValue('address.city', address.city);
-    } catch (error) {
-      console.warn(error);
-    }
+  const updateUser = (data) => {
+    axios.patch(
+      `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
+  };
+
+  const {
+    handleSubmit, control,
+  } = useForm();
+
+  const onSubmit = (data) => {
+    updateUser(data);
   };
 
   useEffect(() => {
@@ -67,74 +74,102 @@ const ProfileScreen = () => {
   return (
 
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-      />
-      <Text
-        style={styles.header}
-      >
-        {' '}
-        User Profile
-      </Text>
-      <Image
-        source={{
-          uri: 'https://i.redd.it/v0caqchbtn741.jpg',
-        }}
-        style={styles.image}
-      />
-      <Text>Skill Level:</Text>
-      <View
-        style={styles.inputContainer}
-      >
-        <Text>Country of origin:</Text>
-        <Controller
-          name="address.city"
-          control={control}
-          render={({ onChange, value }) => (
-            <TextInput
-              onChangeText={(text) => onChange(text)}
-              value={value}
-              placeholder="insert country here"
-              defaultValue=""
-              style={styles.textInput}
-            />
-          )}
+      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 1 }}>
+        <StatusBar
+          barStyle="dark-content"
         />
-        <Button onPress={handleSubmit(onSubmit)} title="submit" />
-        <Text>Native language(s):</Text>
-        <Controller
-          name="language"
-          control={control}
-          render={({ onChange, value }) => (
-            <TextInput
-              onChangeText={(text) => onChange(text)}
-              value={value}
-              placeholder="insert native language(s) here"
-              defaultValue=""
-              style={styles.textInput}
-            />
-          )}
+        <Text
+          style={styles.header}
+        >
+          {' '}
+          User Profile
+        </Text>
+        <Image
+          source={{
+            uri: 'https://i.redd.it/v0caqchbtn741.jpg',
+          }}
+          style={styles.image}
         />
-        <Button onPress={handleSubmit(onSubmit)} title="submit" />
-        <Text>About me:</Text>
-        <Controller
-          name="description"
-          control={control}
-          render={({ onChange, value }) => (
-            <TextInput
-              onChangeText={(text) => onChange(text)}
-              value={value}
-              placeholder="insert description here"
-              defaultValue=""
-              style={styles.textInput}
-            />
-          )}
-        />
-        <Button onPress={handleSubmit(onSubmit)} title="submit" />
       </View>
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#F42B03', height: 50, justifyContent: 'center', display: 'flex', flexDirection: 'row',
+        }}
+        onPress={() => navigation.navigate('Quiz')}
+      >
+
+        <Icon
+          name="trophy"
+          style={{
+            marginTop: 14, marginRight: 5, color: '#ffc857', fontSize: 18,
+          }}
+        />
+        <Text style={{ color: 'white', fontSize: 18, marginTop: 10 }}>Novice</Text>
+        <Text style={{
+          position: 'absolute', right: 10, color: 'white', fontWeight: 'bold',
+        }}
+        >
+          Level up!
+        </Text>
+      </TouchableOpacity>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <Text style={{
+          margin: 5, fontSize: 20, color: '#0f9535', fontWeight: 'bold',
+        }}
+        >
+          🎌Country of origin
+        </Text>
+        <Controller
+          name="country"
+          control={control}
+          render={({ onChange, value }) => (
+            <TextInput
+              onChangeText={(text) => onChange(text)}
+              value={value}
+              defaultValue={userInfo && userInfo.country}
+              style={{ backgroundColor: 'white', margin: 5, borderRadius: 5 }}
+            />
+          )}
+        />
+        <Controller
+          name="aboutme"
+          control={control}
+          render={({ onChange, value }) => (
+            <TextInput
+              onChangeText={(text) => onChange(text)}
+              value={value}
+              defaultValue=""
+              placeholder="about me"
+              multiline
+              numberOfLines={10}
+              style={{
+                margin: 5, backgroundColor: 'white', borderRadius: 5, textAlign: 'center', fontSize: 20, color: '#0f9535',
+              }}
+            />
+          )}
+        />
+        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+          <Text style={{
+            marginLeft: 5,
+            backgroundColor: 'white',
+            width: 85,
+            height: 30,
+            color: '#2E86ab',
+            fontWeight: 'bold',
+            fontSize: 20,
+            textAlign: 'center',
+            marginBottom: 5,
+            borderRadius: 5,
+          }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 };
-// const styles = StyleSheet.create({});
 
 export default ProfileScreen;
