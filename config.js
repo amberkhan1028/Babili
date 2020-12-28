@@ -1,8 +1,8 @@
 /* eslint-disable import/no-unresolved */
 import {
   PUSHER_APP_ID,
-  GOOGLE_AND,
   GOOGLE_IOS,
+  GOOGLE_AND,
   DIALOG_FLOW_CLIENT_EMAIL,
   BASE_URL,
   OCR,
