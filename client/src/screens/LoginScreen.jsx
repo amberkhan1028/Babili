@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import axios from 'axios';
+import firebase from 'firebase';
 import config from '../../../config';
 
 const styles = StyleSheet.create({
@@ -27,55 +28,78 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
 });
-
 export default function LoginScreen({ navigation: { navigate } }) {
-  async function signInWithGoogleAsync() {
+  const isSameUser = (googleUser, firebaseUser) => {
+    if (firebaseUser) {
+      const { providerData } = firebaseUser;
+      for (let i = 0; i < providerData.length; i + 1) {
+        if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          && providerData[i].uid === googleUser.getBasicProfile().getId()
+        ) {
+          // We don't need to re-auth the Firebase connection.
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const onSignIn = async (googleUser) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+      unsubscribe();
+      // if current user and current firebase user are not the same
+      if (!isSameUser(googleUser, firebaseUser)) {
+        // create a new google credit...
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          googleUser.idToken,
+          googleUser.accessToken,
+        );
+          // ...and sign in with that credit
+        const result = await firebase.auth().signInWithCredential(credential);
+        console.warn('user signed in', result);
+        // if user is new add info to fb and postgreSql
+        if (result.additionalUserInfo.isNewUser) {
+          firebase.database().ref(`/users/${result.user.uid}`)
+            .set({
+              gmail: result.user.email,
+              profile_picture: result.additionalUserInfo.profile.picture,
+              first_name: result.additionalUserInfo.profile.given_name,
+              last_name: result.additionalUserInfo.profile.family_name,
+              created_at: Date.now(),
+            });
+          await axios.post('http://192.168.1.138:3000/login', {
+            email: result.user.email,
+            name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
+            photoUrl: result.additionalUserInfo.profile.picture,
+          });
+          navigate('Home', { email: result.user.email });
+        } else { // user is not new, just update login in firebase
+          firebase.database().ref(`/users/${result.user.uid}`).update({
+            last_logged_in: Date.now(),
+          });
+        }
+      } else {
+        console.warn('User already signed-in Firebase.');
+      }
+    });
+  };
+
+  const signInWithGoogleAsync = async () => {
     try {
-      const { type, user } = await Google.logInAsync({
+      const result = await Google.logInAsync({
         androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
         scopes: ['profile', 'email'],
         permissions: ['public_profile', 'email', 'gender', 'location'],
         androidStandaloneAppClientId: config.GOOGLE_AND,
-
       });
-      if (type === 'success') {
-        // const userData = {
-        //   email: user.email,
-        //   name: user.name,
-        //   id: user.id,
-        //   photoUrl: user.photoUrl,
-        //   accessToken,
-        // };
-
-        axios.get(`${config.BASE_URL}/user/${user.email}`)
-          .then((res) => {
-            // console.warn(res)
-            navigate('Home', {
-              email: res.data.email,
-            });
-          })
-          .catch((err) => {
-            // user not found, so create user
-            const postData = {
-              name: user.name,
-              email: user.email,
-              image: user.photoUrl,
-            };
-
-            axios.post(`${config.BASE_URL}/user`, postData)
-              .then(() => navigate('Home', {
-                email: user.email,
-              }));
-            console.warn(err);
-          });
+      if (result.type === 'success') {
+        await onSignIn(result);
       }
-      return { cancelled: true };
-    } catch (e) {
-      console.warn('something went wrong :(', e);
-      return { error: true };
+    } catch (err) {
+      console.warn('err in signInWithGoogleAsync', err);
     }
-  }
+  };
 
   const signInWithGoogle = () => {
     signInWithGoogleAsync();

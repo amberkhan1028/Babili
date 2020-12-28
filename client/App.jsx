@@ -5,9 +5,12 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import firebase from 'firebase';
+import config from '../config';
 import LoginScreen from './src/screens/LoginScreen';
 import MatchingGameScreen from './src/screens/MatchingGameScreen';
 import ObjectOrDocScreen from './src/screens/ObjectOrDocScreen';
+import LoadingScreen from './src/screens/LoadingScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import FriendsScreen from './src/screens/FriendsScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
@@ -16,6 +19,13 @@ import FlashCardOrMatchingScreen from './src/screens/FlashCardOrMatchingScreen';
 import ObjectDetectionScreen from './src/screens/ObjectDetectionScreen';
 import DocumentScreen from './src/screens/DocumentScreen';
 import QuizScreen from './src/screens/QuizScreen';
+
+// if firebase app isn't initialized, initialize it
+if (!firebase.apps.length) {
+  firebase.initializeApp(config.firebaseConfig);
+} else {
+  firebase.app();
+}
 
 const AppStack = createBottomTabNavigator({
   Messages: MessagesScreen,
@@ -53,6 +63,7 @@ const AppStack = createBottomTabNavigator({
 });
 
 const navigator = createStackNavigator({
+  Loading: LoadingScreen,
   Messages: MessagesScreen,
   Login: LoginScreen,
   FlashCard: FlashCardScreen,
@@ -62,7 +73,7 @@ const navigator = createStackNavigator({
   Quiz: QuizScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Login',
+  initialRouteName: 'Loading',
   defaultNavigationOptions: {
     title: 'babili',
   },
