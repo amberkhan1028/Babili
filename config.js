@@ -1,6 +1,9 @@
 /* eslint-disable import/no-unresolved */
 import {
   PUSHER_APP_ID,
+  PUSHER_KEY,
+  PUSHER_SECRET,
+  PUSHER_CLUSTER,
   GOOGLE_AND,
   GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
@@ -12,6 +15,9 @@ import {
 
 export default {
   PUSHER_APP_ID,
+  PUSHER_KEY,
+  PUSHER_SECRET,
+  PUSHER_CLUSTER,
   GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
   GOOGLE_AND,
@@ -19,4 +25,10 @@ export default {
   BASE_URL,
   OCR,
   DIALOG_FLOW_PROJECT_ID,
+};
+
+module.exports = {
+  s3: {
+    pusher: process.env.PUSHER_APP_ID,
+  },
 };

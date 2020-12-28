@@ -4,6 +4,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { Client } = require('pg');
+
+const { sequelize } = require('./db/index');
+const wordbank = require('./db/Routes/wordBank');
+const messages = require('./db/Routes/messages');
+
 const wordbank = require('./db/Routes/wordBank');
 const user = require('./db/Routes/user');
 
@@ -13,6 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/', wordbank);
+app.use('/', messages);
 app.use('/', user);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
