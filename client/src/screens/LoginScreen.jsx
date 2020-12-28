@@ -58,7 +58,9 @@ export default function LoginScreen({ navigation: { navigate } }) {
           .catch((err) => {
             // user not found, so create user
             const postData = {
+              name: user.name,
               email: user.email,
+              image: user.photoUrl,
             };
 
             axios.post(`${config.BASE_URL}/user`, postData)

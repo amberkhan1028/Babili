@@ -47,7 +47,7 @@ const AppStack = createBottomTabNavigator({
     inactiveTintColor: '#bedfed',
     activeTintColor: '#fec857',
     style: {
-      backgroundColor: '#2e86ab',
+      backgroundColor: '#147EFB',
     },
   },
 });
@@ -62,7 +62,7 @@ const navigator = createStackNavigator({
   Quiz: QuizScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'Home',
+  initialRouteName: 'Login',
   defaultNavigationOptions: {
     title: 'babili',
   },
