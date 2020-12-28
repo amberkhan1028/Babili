@@ -2,16 +2,16 @@
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-// eslint-disable-next-line camelcase
+import { Platform } from 'react-native';
 import firebase from 'firebase';
 import { Dialogflow_V2 } from 'react-native-dialogflow-text';
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 import config from '../../../config';
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
-  const [currentUser, setCurrentUser] = useState();
 
   const BOT_USER = {
     _id: 2,
@@ -26,8 +26,6 @@ export default function MessagesScreen() {
       Dialogflow_V2.LANG_ENGLISH_US,
       config.DIALOG_FLOW_PROJECT_ID,
     );
-    setCurrentUser(firebase.auth().currentUser);
-    console.warn(currentUser);
     registerForPushNotificationsAsync();
   });
 
@@ -43,21 +41,35 @@ export default function MessagesScreen() {
   }, []);
 
   const registerForPushNotificationsAsync = async () => {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.NOTIFICATIONS,
-    );
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') { // see if the user has already granted permission
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        console.warn('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.warn(token);
+      const currentUser = await firebase.auth().currentUser;
+      firebase
+        .database()
+        .ref(`users/${currentUser.uid}/push_token`)
+        .set(token);
+    } else {
+      console.warn('Must use physical device for Push Notifications');
     }
-    if (finalStatus !== 'granted') { return; } // return if they don't grant permission
-    try {
-      // token that uniquely identifies this device
-      const token = await Notifications.getExpoPushTokenAsync();
-      firebase.database().ref(`users/${currentUser.uid}/push_token`).set(token);
-    } catch (error) {
-      console.warn(error);
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
   };
 

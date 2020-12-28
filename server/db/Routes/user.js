@@ -14,7 +14,7 @@ db.connect()
   .then(() => console.warn('db connected !! :^)'))
   .catch((e) => console.warn(`unable to connect to db: ${e.message}`));
 // get all users
-router.get('/user', async (req, res) => {
+router.get('/all/user', async (req, res) => {
   try {
     const findAll = 'SELECT * FROM users';
     const { rows } = await db.query(findAll);
@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
   const {
     email, name, photoUrl, id, accessToken,
   } = req.body;
-  console.warn(req.body);
+  console.warn('req.body', req.body);
   const insertOne = 'INSERT into users (email, username, userid, image, session) VALUES ($1, $2, $3, $4, $5)';
   await db.query(insertOne, [email, name, id, photoUrl, accessToken]);
   res.status(201).send({ error: false, message: 'user added successfully!' });
