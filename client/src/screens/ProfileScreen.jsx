@@ -14,7 +14,7 @@ import FriendRequests from '../components/FriendRequests';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     margin: 2,
     backgroundColor: '#E8E8E8',
   },

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { createAppContainer } from 'react-navigation';

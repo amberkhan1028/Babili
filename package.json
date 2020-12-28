@@ -99,6 +99,7 @@
     "react-navigation": "^4.4.3",
     "react-navigation-stack": "^2.10.2",
     "react-navigation-tabs": "^2.10.1",
+    "react-quiz-component": "^0.3.8",
     "regenerator-runtime": "^0.13.7",
     "sequelize": "^6.3.5",
     "stream-chat": "^2.10.0",
