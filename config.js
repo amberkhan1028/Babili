@@ -13,14 +13,14 @@ import {
   from '@env';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBWRNeIwuQjakiWOPVUls6sDomAU2UeXwE',
+  apiKey: 'AIzaSyB6AZFdIcFD9sFJxddUt-eUw1aHIaXVNf4',
   authDomain: 'babili-299117.firebaseapp.com',
   databaseURL: 'https://babili-299117-default-rtdb.firebaseio.com',
   projectId: 'babili-299117',
-  messagingSenderId: '932033800797',
   storageBucket: 'babili-299117.appspot.com',
-  appId: '1:932033800797:web:fabf239c109f59f5df7bb4',
-  measurementId: 'G-1C7Y08611T',
+  messagingSenderId: '932033800797',
+  appId: '1:932033800797:web:8448333d6098b48fdf7bb4',
+  measurementId: 'G-8KFB07WSNL',
 };
 export default {
   PUSHER_APP_ID,
