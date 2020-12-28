@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 import axios from 'axios';
+import firebase from 'firebase';
 import config from '../../../config';
 
 const styles = StyleSheet.create({
@@ -28,40 +29,97 @@ const styles = StyleSheet.create({
   },
 });
 export default function LoginScreen({ navigation: { navigate } }) {
+  const isSameUser = (googleUser, firebaseUser) => {
+    if (firebaseUser) {
+      const { providerData } = firebaseUser;
+      for (let i = 0; i < providerData.length; i + 1) {
+        if (
+          providerData[i].providerId
+            === firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          && providerData[i].uid === googleUser.getBasicProfile().getId()
+        ) {
+          // We don't need to re-auth the Firebase connection.
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const onSignIn = (googleUser) => {
+    // We need to register an Observer on Firebase Auth to make sure auth is initialized.
+    const unsubscribe = firebase.auth().onAuthStateChanged(
+      (firebaseUser) => {
+        unsubscribe();
+        // Check if we are already signed-in Firebase with the correct user.
+        if (!isSameUser(googleUser, firebaseUser)) {
+          // Build Firebase credential with the Google ID token.
+          const credential = firebase.auth.GoogleAuthProvider.credential(
+            googleUser.idToken,
+            googleUser.accessToken,
+          );
+          // Sign in with credential from the Google user.
+          firebase
+            .auth()
+            .signInAndRetrieveDataWithCredential(credential)
+            .then((result) => {
+              console.warn('user signed in ');
+              if (result.additionalUserInfo.isNewUser) {
+                firebase
+                  .database()
+                  .ref(`/users/${result.user.uid}`)
+                  .set({
+                    gmail: result.user.email,
+                    profile_picture: result.additionalUserInfo.profile.picture,
+                    first_name: result.additionalUserInfo.profile.given_name,
+                    last_name: result.additionalUserInfo.profile.family_name,
+                    created_at: Date.now(),
+                  });
+              } else {
+                firebase
+                  .database()
+                  .ref(`/users/${result.user.uid}`)
+                  .update({
+                    last_logged_in: Date.now(),
+                  });
+              }
+            })
+            .catch((error) => {
+              console.warn(error);
+            });
+        } else {
+          console.warn('User already signed-in Firebase.');
+        }
+      },
+    );
+  };
+
   async function signInWithGoogleAsync() {
     try {
-      const { type, user } = await Google.logInAsync({
+      const result = await Google.logInAsync({
         androidClientId: config.GOOGLE_AND,
         iosClientId: config.GOOGLE_IOS,
         scopes: ['profile', 'email'],
         permissions: ['public_profile', 'email', 'gender', 'location'],
         androidStandaloneAppClientId: config.GOOGLE_AND,
-      });
-      if (type === 'success') {
-        // const userData = {
-        //   email: user.email,
-        //   name: user.name,
-        //   id: user.id,
-        //   photoUrl: user.photoUrl,
-        //   accessToken,
-        // };
 
-        axios.get(`${config.BASE_URL}/user/${user.email}`)
+      });
+      if (result.type === 'success') {
+        onSignIn(result);
+        axios.get(`http://192.168.1.138:3000/user/${result.user.email}`)
           .then((res) => {
-            // console.warn(res)
-            navigate('Home', {
-              email: res.data.email,
-            });
+            navigate('Home', { email: res.data.email });
           })
           .catch((err) => {
             // user not found, so create user
-            const postData = {
-              email: user.email,
-            };
-
-            axios.post(`${config.BASE_URL}/user`, postData).then(() => navigate('Home', {
-              email: user.email,
-            }));
+            axios.post('http://192.168.1.138:3000/login', {
+              email: result.user.email,
+              name: result.user.name,
+              photoUrl: result.user.photoUrl,
+              id: result.user.id,
+              session: result.accessToken,
+            })
+              .then(() => navigate('Home', { email: result.user.email }));
             console.warn(err);
           });
       }
@@ -71,9 +129,11 @@ export default function LoginScreen({ navigation: { navigate } }) {
       return { error: true };
     }
   }
+
   const signInWithGoogle = () => {
     signInWithGoogleAsync();
   };
+
   return (
     <View style={styles.container}>
       <StatusBar

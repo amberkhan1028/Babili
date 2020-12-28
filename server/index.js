@@ -18,10 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const PORT = process.env.PORT || 3000;
-// const connectionString = process.env.CONNECTION_STRING;
-// const db = new Client({
-//   connectionString: 'postgres://bpmlkbxh:m1BaCCNnI-bvaX5VzB1F5Wa5Gnku0C79@suleiman.db.elephantsql.com:5432/bpmlkbxh',
-// });
 
 const connectionString = process.env.CONNECTION_STRING;
 const db = new Client({
