@@ -18,6 +18,7 @@ import FlashCardScreen from './src/screens/FlashCardScreen';
 import FlashCardOrMatchingScreen from './src/screens/FlashCardOrMatchingScreen';
 import ObjectDetectionScreen from './src/screens/ObjectDetectionScreen';
 import DocumentScreen from './src/screens/DocumentScreen';
+import QuizScreen from './src/screens/QuizScreen';
 
 // if firebase app isn't initialized, initialize it
 if (!firebase.apps.length) {
@@ -69,6 +70,7 @@ const navigator = createStackNavigator({
   Matching: MatchingGameScreen,
   Document: DocumentScreen,
   Object: ObjectDetectionScreen,
+  Quiz: QuizScreen,
   Home: AppStack,
 }, {
   initialRouteName: 'Loading',

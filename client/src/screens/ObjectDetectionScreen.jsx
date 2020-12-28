@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingTop: 15,
-    paddingRight: 20,
+    paddingRight: 30,
   },
   camera: {
     width: 700 / 2,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderRadius: 8,
     color: 'black',
-    paddingRight: 30,
+    paddingRight: 20,
     backgroundColor: '#ffffff',
   },
 });
@@ -107,8 +107,7 @@ export default function ObjectDetectionScreen() {
 
   const TensorCamera = cameraWithTensors(Camera);
   let requestAnimationFrameId = 0;
-  const textureDims = Platform.OS === 'ios'
-    ? { width: 1080, height: 1920 } : { width: 1600, height: 1200 };
+  const textureDims = Platform.OS === 'ios' ? { width: 1080, height: 1920 } : { width: 1600, height: 1200 };
   const tensorDims = { width: 152, height: 200 };
   const loadMobileNetModel = async () => {
     const model = await mobilenet.load();
@@ -118,13 +117,11 @@ export default function ObjectDetectionScreen() {
   useEffect(() => {
     if (!frameworkReady) {
       (async () => {
+        await tf.ready();
         const { status } = await Camera.requestPermissionsAsync();
         setHasPermission(status === 'granted');
-        await tf.ready();
-
-        setMobilenetModel(await loadMobileNetModel());
-
         setFrameworkReady(true);
+        setMobilenetModel(await loadMobileNetModel());
       })();
     }
   }, []);
@@ -164,7 +161,7 @@ export default function ObjectDetectionScreen() {
   };
 
   const getPrediction = async (tensor) => {
-    if (!tensor) {
+    if (!tensor || tensor === null) {
       return;
     }
     const prediction = await mobilenetModel.classify(tensor, 1);
@@ -224,7 +221,7 @@ export default function ObjectDetectionScreen() {
         resizeWidth={tensorDims.width}
         resizeDepth={3}
         onReady={(imageAsTensors) => handleCameraStream(imageAsTensors)}
-        autorender
+        autorender={false}
       />
       <Text style={styles.legendTextField}>
         Point to any object and get its translation
