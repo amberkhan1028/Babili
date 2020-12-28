@@ -55,10 +55,7 @@ export default function MessagesScreen() {
     try {
       // token that uniquely identifies this device
       const token = await Notifications.getExpoPushTokenAsync();
-      firebase
-        .database()
-        .ref(`users/${currentUser.uid}/push_token`)
-        .set(token);
+      firebase.database().ref(`users/${currentUser.uid}/push_token`).set(token);
     } catch (error) {
       console.warn(error);
     }

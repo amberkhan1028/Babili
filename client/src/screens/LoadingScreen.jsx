@@ -17,7 +17,6 @@ export default function LoadingScreen({ navigation: { navigate } }) {
   const checkIfLoggedIn = () => {
     firebase.auth().onAuthStateChanged(
       (user) => {
-        console.warn('user', user);
         if (user) { // a user is already logged in on this device
           navigate('Home');
         } else {

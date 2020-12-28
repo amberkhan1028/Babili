@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 /* eslint-disable react/prop-types */
 import 'react-native-gesture-handler';
 import React from 'react';
@@ -28,17 +27,16 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
 });
+
 export default function LoginScreen({ navigation: { navigate } }) {
   const isSameUser = (googleUser, firebaseUser) => {
     if (firebaseUser) {
       const { providerData } = firebaseUser;
+      console.warn('provider data', providerData);
       for (let i = 0; i < providerData.length; i + 1) {
-        if (
-          providerData[i].providerId
-            === firebase.auth.GoogleAuthProvider.PROVIDER_ID
-          && providerData[i].uid === googleUser.getBasicProfile().getId()
-        ) {
-          // We don't need to re-auth the Firebase connection.
+        if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID
+          && providerData[i].uid === googleUser.getBasicProfile().getId()) {
+          // don't need to re-auth the Firebase connection.
           return true;
         }
       }
@@ -47,46 +45,33 @@ export default function LoginScreen({ navigation: { navigate } }) {
   };
 
   const onSignIn = (googleUser) => {
-    // We need to register an Observer on Firebase Auth to make sure auth is initialized.
     const unsubscribe = firebase.auth().onAuthStateChanged(
       (firebaseUser) => {
         unsubscribe();
-        // Check if we are already signed-in Firebase with the correct user.
-        if (!isSameUser(googleUser, firebaseUser)) {
-          // Build Firebase credential with the Google ID token.
+        // Check if signed-in Firebase with the correct user.
+        if (!isSameUser(googleUser, firebaseUser)) { // if not the same user
+          // create Firebase credentials with the Google ID token.
           const credential = firebase.auth.GoogleAuthProvider.credential(
             googleUser.idToken,
             googleUser.accessToken,
           );
           // Sign in with credential from the Google user.
-          firebase
-            .auth()
-            .signInAndRetrieveDataWithCredential(credential)
-            .then((result) => {
-              console.warn('user signed in ');
-              if (result.additionalUserInfo.isNewUser) {
-                firebase
-                  .database()
-                  .ref(`/users/${result.user.uid}`)
-                  .set({
-                    gmail: result.user.email,
-                    profile_picture: result.additionalUserInfo.profile.picture,
-                    first_name: result.additionalUserInfo.profile.given_name,
-                    last_name: result.additionalUserInfo.profile.family_name,
-                    created_at: Date.now(),
-                  });
-              } else {
-                firebase
-                  .database()
-                  .ref(`/users/${result.user.uid}`)
-                  .update({
-                    last_logged_in: Date.now(),
-                  });
-              }
-            })
-            .catch((error) => {
-              console.warn(error);
-            });
+          firebase.auth().signInAndRetrieveDataWithCredential(credential).then((result) => {
+            console.warn('user signed in ');
+            if (result.additionalUserInfo.isNewUser) { // if they are a new user add to fb db
+              firebase.database().ref(`/users/${result.user.uid}`).set({
+                gmail: result.user.email,
+                profile_picture: result.additionalUserInfo.profile.picture,
+                first_name: result.additionalUserInfo.profile.given_name,
+                last_name: result.additionalUserInfo.profile.family_name,
+                created_at: Date.now(),
+              });
+            } else { // otherwise update their last login date
+              firebase.database().ref(`/users/${result.user.uid}`).update({
+                last_logged_in: Date.now(),
+              });
+            }
+          }).catch((error) => console.warn(error));
         } else {
           console.warn('User already signed-in Firebase.');
         }
@@ -105,7 +90,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
 
       });
       if (result.type === 'success') {
-        onSignIn(result);
+        onSignIn(result); // check if user exists in fb db and postgresql db
         axios.get(`http://192.168.1.138:3000/user/${result.user.email}`)
           .then((res) => {
             navigate('Home', { email: res.data.email });
