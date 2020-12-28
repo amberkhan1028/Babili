@@ -58,7 +58,7 @@ const FriendRequests = ({ currentUserEmail }) => {
       const userSendingRequest = res.data;
       console.warn('USER SENDING REQ RESP=>', userSendingRequest);
       const currentUserInfo = { name: userInfo.name, email: userInfo.email, image: userInfo.image };
-      // update the friend lists of the user that sent request
+      // update the friend list of the user that sent request
       const updateFriendList = [...currentUserInfo, ...userSendingRequest.friends];
       updateFriend(data.email, { friends: updateFriendList });
     });

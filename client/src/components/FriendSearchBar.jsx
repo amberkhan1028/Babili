@@ -70,7 +70,7 @@ function FriendSearchBar({ searchFriend, searchResults, sendFriendRequest }) {
           </View>
         ))}
 
-        {!searchResults.length > 0 && (<Text style={[styles.searchText, { alignSelf: 'center', paddingVertical: 20 }]}>no results found </Text>)}
+        {!searchResults.length > 0 && (<Text style={[styles.searchText, { alignSelf: 'center', paddingVertical: 20 }]}>user not found</Text>)}
 
       </View>
       )

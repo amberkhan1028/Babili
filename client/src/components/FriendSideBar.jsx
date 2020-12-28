@@ -27,7 +27,6 @@ function FriendSideBar({ friendLists, onFriendPress }) {
       {(friendLists && friendLists.length > 0)
     && friendLists.map((friend) => (
       <TouchableOpacity onPress={() => onFriendPress(friend)}>
-
         <Image
           source={{
             uri: friend.image,
@@ -35,7 +34,6 @@ function FriendSideBar({ friendLists, onFriendPress }) {
           style={styles.image}
         />
       </TouchableOpacity>
-
     ))}
     </View>
   );

@@ -63,8 +63,7 @@ const FriendsScreen = ({ navigation }) => {
   };
 
   const sendFriendRequest = (data) => {
-    // TODO:  Check whether request has ben sent before and alert user.
-    // Reset prev results
+    // reset prev results
     axios.get(
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
