@@ -8,11 +8,7 @@ const { Client } = require('pg');
 const { sequelize } = require('./db/index');
 const wordbank = require('./db/Routes/wordBank');
 const messages = require('./db/Routes/messages');
-
-const wordbank = require('./db/Routes/wordBank');
 const user = require('./db/Routes/user');
-
-const { sequelize } = require('./db/index');
 
 const app = express();
 app.use(cors());

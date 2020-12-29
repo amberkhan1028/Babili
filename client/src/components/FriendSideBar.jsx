@@ -20,22 +20,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const FriendSideBar = ({ friendLists, onFriendPress }) => (
-  <View style={styles.container}>
-    {(friendLists && friendLists.length > 0)
+function FriendSideBar({ friendLists, onFriendPress }) {
+// alert(JSON.stringify(friendLists))
+  return (
+    <View style={styles.container}>
+      {(friendLists && friendLists.length > 0)
     && friendLists.map((friend) => (
       <TouchableOpacity onPress={() => onFriendPress(friend)}>
-
         <Image
           source={{
-            uri: friend.img,
+            uri: friend.image,
           }}
           style={styles.image}
         />
       </TouchableOpacity>
-
     ))}
-  </View>
-);
+    </View>
+  );
+}
 
 export default FriendSideBar;
