@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-alert */
 /* eslint-disable react/prop-types */
 import 'react-native-gesture-handler';
@@ -67,15 +68,11 @@ export default function LoginScreen({ navigation: { navigate } }) {
               last_name: result.additionalUserInfo.profile.family_name,
               created_at: Date.now(),
             });
-          try {
-            await axios.post('http://192.168.1.138:3000/login', {
-              email: result.user.email,
-              name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
-              photoUrl: result.additionalUserInfo.profile.picture,
-            });
-          } catch (e) {
-            console.warn('error with sql post', e);
-          }
+          await axios.post('http://192.168.0.12:3000/login', {
+            email: result.user.email,
+            name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
+            photoUrl: result.additionalUserInfo.profile.picture,
+          });
           navigate('Home', { email: result.user.email });
         } else { // user is not new, just update login in firebase
           firebase.database().ref(`/users/${result.user.uid}`).update({

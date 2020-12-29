@@ -1,13 +1,16 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import {
-  View, Text, TextInput, StyleSheet, StatusBar,
-  KeyboardAvoidingView, Image, TouchableOpacity, Platform,
+  View, Text, TextInput, StyleSheet, StatusBar, Button, Image, ScrollView,
+  KeyboardAvoidingView, TouchableOpacity, Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config';
+import FriendRequests from '../components/FriendRequests';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,9 +26,9 @@ const styles = StyleSheet.create({
     color: '#F42B03',
   },
   image: {
-    width: '50%',
-    height: '75%',
-    borderRadius: 80,
+    width: '25%',
+    height: '50%',
+    borderRadius: 40,
     alignSelf: 'center',
   },
   textInput: {
@@ -49,14 +52,14 @@ const ProfileScreen = ({ navigation }) => {
     axios.get(
       `${config.BASE_URL}/user/`,
     ).then((res) => setUserInfo(res.data))
-      .catch((e) => console.warn(e.message));
+      .catch((e) => console.warn('1', e.message));
   };
 
   const updateUser = (data) => {
     axios.patch(
       `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
-    ).then((res) => console.warn(res.data))
-      .catch((e) => console.warn(e.message));
+    ).then((res) => console.warn('2', res.data))
+      .catch((e) => console.warn('3', e.message));
   };
 
   const {
@@ -168,6 +171,11 @@ const ProfileScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
+      <Button onPress={handleSubmit(onSubmit)} title="submit" />
+      <Text>Friend Requests</Text>
+      <ScrollView>
+        <FriendRequests />
+      </ScrollView>
     </View>
   );
 };
