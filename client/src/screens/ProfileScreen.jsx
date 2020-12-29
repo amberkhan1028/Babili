@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import config from '../../../config';
-// import FriendRequests from '../components/FriendRequests';
+import FriendRequests from '../components/FriendRequests';
 
 const styles = StyleSheet.create({
   container: {
@@ -174,7 +174,7 @@ const ProfileScreen = ({ navigation }) => {
       <Button onPress={handleSubmit(onSubmit)} title="submit" />
       <Text>Friend Requests</Text>
       <ScrollView>
-        {/* <FriendRequests /> */}
+        <FriendRequests />
       </ScrollView>
     </View>
   );
