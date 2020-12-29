@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 /* eslint-disable no-alert */
 /* eslint-disable react/prop-types */
 import 'react-native-gesture-handler';
