@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View, Text, StyleSheet,
 } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +17,8 @@ const FriendChat = ({ currentFriend }) => (
   <View style={styles.container}>
     <Text>Friend Chat</Text>
     {currentFriend && (<Text>{currentFriend.name}</Text>)}
+    <TextInput />
+    <TextInput>send message</TextInput>
   </View>
 );
 

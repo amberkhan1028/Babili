@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
   },
-  searchText: { color: '#fff' },
+  searchText: { color: 'white' },
   addButton: {
     backgroundColor: '#147EFB', marginBottom: 5, justifyContent: 'center', paddingHorizontal: 5,
   },
@@ -42,23 +42,24 @@ const FriendRequests = ({ currentUserEmail }) => {
     const removeFromFriendRequestIndex = userInfo.friendrequests.findIndex(({
       email }) => email === data.email);
     // const addFriend = [userSendingRequest, ...userGettingRequest.friendrequests];
-    // console.warn("REMOVE FROM FRIEND REQ=>",  removeFromFriendRequestIndex);
+    console.warn('REMOVE FROM FRIEND REQ=>', removeFromFriendRequestIndex);
     userInfo.friendrequests.splice(removeFromFriendRequestIndex, 1);
-    // console.warn("USER FRIEND REQ=>",  userInfo.friendrequests);
+    console.warn('USER FRIEND REQ=>', userInfo.friendrequests);
     const addFriend = [...removeFromFriendRequest, ...userInfo.friends];
     // send friend request to the server to handle
     updateFriend(userInfo.email, {
       friendrequests: [...userInfo.friendrequests],
       friends: addFriend,
     });
-    // update the friend that sent the request
+    // update the friend that sends request
     axios.get(
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
       const userSendingRequest = res.data;
-      console.warn('USER SENDING REQ RESP=>', userSendingRequest);
+      // console.warn('USER SENDING REQ RESP=>', userSendingRequest);
       const currentUserInfo = { name: userInfo.name, email: userInfo.email, image: userInfo.image };
-      // update the friend list of the user that sent request
+      console.warn(currentUserInfo, 'CURRENT');
+      // update the friend lists of the user that sent request
       const updateFriendList = [...currentUserInfo, ...userSendingRequest.friends];
       updateFriend(data.email, { friends: updateFriendList });
     });
