@@ -12,7 +12,5 @@ web-build/
 .eslintcache
 .npm
 pusher.json
-config.js
-
 # macOS
 .DS_Store
