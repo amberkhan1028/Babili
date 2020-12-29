@@ -26,7 +26,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions": ["CAMERA"]
+      "permissions": ["CAMERA"],
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/logo.png"

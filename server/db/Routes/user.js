@@ -31,11 +31,11 @@ router.get('/all/user', async (req, res) => {
 // add user
 router.post('/login', async (req, res) => {
   const {
-    email, name, photoUrl, id, accessToken,
+    email, name, photoUrl,
   } = req.body;
-  console.warn('req.body', req.body);
-  const insertOne = 'INSERT into users (email, username, userid, image, session) VALUES ($1, $2, $3, $4, $5)';
-  await db.query(insertOne, [email, name, id, photoUrl, accessToken]);
+  console.warn(req.body);
+  const insertOne = 'INSERT into users (email, username, image) VALUES ($1, $2, $3)';
+  await db.query(insertOne, [email, name, photoUrl]);
   res.status(201).send({ error: false, message: 'user added successfully!' });
 });
 
@@ -51,6 +51,7 @@ router.get('/user/search/', async (req, res) => {
 // get a specific user
 router.get('/user/:email', async (req, res) => {
   const { email } = req.params;
+  console.warn('in client', req.params);
   const findOne = 'SELECT * FROM Users WHERE email = $1';
   const { rows, rowCount } = await db.query(findOne, [email]);
   if (rowCount > 0) return res.status(200).send(rows[0]);

@@ -57,10 +57,10 @@ export default function LoginScreen({ navigation: { navigate } }) {
         );
           // ...and sign in with that credit
         const result = await firebase.auth().signInWithCredential(credential);
-        console.warn('user signed in', result);
+        console.warn('user signed in');
         // if user is new add info to fb and postgreSql
         if (result.additionalUserInfo.isNewUser) {
-          firebase.database().ref(`/users/${result.user.uid}`)
+          await firebase.database().ref(`/users/${result.user.uid}`)
             .set({
               gmail: result.user.email,
               profile_picture: result.additionalUserInfo.profile.picture,
