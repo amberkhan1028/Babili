@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 import FriendSideBar from '../components/FriendSideBar';
 import FriendChat from '../components/FriendChat';
-// import TopFriends from '../components/TopFriends';
+import TopFriends from '../components/TopFriends';
 import FriendSearchBar from '../components/FriendSearchBar';
 import config from '../../../config';
 
@@ -73,10 +73,10 @@ const FriendsScreen = ({ navigation }) => {
         email: userInfo.email,
         image: userInfo.image,
       };
-      const makeFriend = [userSendingRequest, ...userGettingRequest.friendrequests];
+      const makeFriend = [userSendingRequest, ...userGettingRequest.friendrequests || []];
       // Sending friend request to the server to handle
       updateFriend(userGettingRequest.email, { friendrequests: makeFriend });
-    });
+    }).catch((e) => console.warn(e.message));
   };
 
   React.useEffect(() => {
@@ -89,7 +89,7 @@ const FriendsScreen = ({ navigation }) => {
         barStyle="dark-content"
       />
       <View>
-        {/* <TopFriends /> */}
+        <TopFriends />
       </View>
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.chatWrapper}>
