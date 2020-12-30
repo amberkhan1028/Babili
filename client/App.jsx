@@ -70,6 +70,7 @@ const navigator = createStackNavigator({
   Document: DocumentScreen,
   Object: ObjectDetectionScreen,
   Quiz: QuizScreen,
+  Profile: ProfileScreen,
   Home: AppStack,
 }, {
   initialRouteName: 'Loading',
