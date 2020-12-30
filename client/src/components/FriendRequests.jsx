@@ -73,7 +73,7 @@ const FriendRequests = ({ currentUserEmail }) => {
     <View>
       {
         userInfo && userInfo.friendrequests.map(({ image, username, email }) => (
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
               <Text>{username}</Text>
