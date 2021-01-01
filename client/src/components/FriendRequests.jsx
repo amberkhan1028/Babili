@@ -20,19 +20,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const FriendRequests = ({ currentUserEmail }) => {
-  const [userInfo, setUserInfo] = React.useState(null);
-
-  const getCurrentUserInfo = () => {
-    axios.get(
-      `${config.BASE_URL}/user/${currentUserEmail}`,
-    ).then((res) => setUserInfo(res.data))
-      .catch((e) => console.warn(e.message));
-  };
+const FriendRequests = ({ userInfo }) => {
   const updateFriend = (email, data) => {
     axios.patch(
       `${config.BASE_URL}/user/${email}`, data,
-    ).then((res) => alert(res.data))
+    ).then((res) => console.log('done'))
       .catch((e) => alert(e.message));
   };
   const acceptFriendRequest = (data) => {
@@ -41,11 +33,9 @@ const FriendRequests = ({ currentUserEmail }) => {
       email }) => email === data.email);
     const removeFromFriendRequestIndex = userInfo.friendrequests.findIndex(({
       email }) => email === data.email);
-    // const addFriend = [userSendingRequest, ...userGettingRequest.friendrequests];
-    console.warn('REMOVE FROM FRIEND REQ=>', removeFromFriendRequestIndex);
+
     userInfo.friendrequests.splice(removeFromFriendRequestIndex, 1);
-    console.warn('USER FRIEND REQ=>', userInfo.friendrequests);
-    const addFriend = [...removeFromFriendRequest, ...userInfo.friends];
+    const addFriend = [...removeFromFriendRequest, ...userInfo.friends || []];
     // send friend request to the server to handle
     updateFriend(userInfo.email, {
       friendrequests: [...userInfo.friendrequests],
@@ -56,23 +46,25 @@ const FriendRequests = ({ currentUserEmail }) => {
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
       const userSendingRequest = res.data;
-      // console.warn('USER SENDING REQ RESP=>', userSendingRequest);
       const currentUserInfo = { name: userInfo.name, email: userInfo.email, image: userInfo.image };
-      console.warn(currentUserInfo, 'CURRENT');
       // update the friend lists of the user that sent request
-      const updateFriendList = [...currentUserInfo, ...userSendingRequest.friends];
-      updateFriend(data.email, { friends: updateFriendList });
+      const updateFriendList = [currentUserInfo, ...userSendingRequest.friends];
+      axios.patch(
+        `${config.BASE_URL}/user/${data.email}`, { friends: updateFriendList }
+      ).then(() => alert("Done with all!!!"))
+      //updateFriend(data.email, { friends: updateFriendList});
     });
   };
 
-  React.useEffect(() => {
-    getCurrentUserInfo();
-  }, []);
+  const declineFriendRequest = data => {
+    // const removeFromFriendRequest = userInfo.
+  };
 
   return (
     <View>
       {
-        userInfo && userInfo.friendrequests.map(({ image, username, email }) => (
+        (userInfo && userInfo.friendrequests.length > 0) ?
+         userInfo.friendrequests.map(({ image, username, email }) => (
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
@@ -82,10 +74,16 @@ const FriendRequests = ({ currentUserEmail }) => {
               style={styles.addButton}
               onPress={() => acceptFriendRequest({ username, email, image })}
             >
-              <Text style={styles.searchText}>Accept Request</Text>
+              <Text style={styles.searchText}>Accept</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+            >
+              <Text style={styles.searchText}>Decline</Text>
             </TouchableOpacity>
           </View>
         ))
+          : (<Text>No Friend Requests Yet!</Text>)
       }
     </View>
   );

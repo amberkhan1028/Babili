@@ -1,4 +1,5 @@
 node_modules
+pusher.json
 .expo
 npm-debug.*
 .env
@@ -11,6 +12,5 @@ npm-debug.*
 web-build/
 .eslintcache
 .npm
-pusher.json
 # macOS
 .DS_Store

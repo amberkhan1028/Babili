@@ -68,6 +68,8 @@ router.patch('/user/:email', async (req, res) => {
     friends,
   } = req.body;
 
+  console.log("UPDATING 4RM SERVER==.", req.body);
+
   // update query
   const updateQuery = 'UPDATE users SET country = $1, language = $2, aboutme = $3, friendrequests = $4, friends = $5  WHERE email = $6';
   // find user
@@ -80,7 +82,7 @@ router.patch('/user/:email', async (req, res) => {
       [country || user.country,
         language || user.language,
         aboutme || user.aboutme,
-        JSON.stringify(friendrequests) || user.friendrequests,
+        JSON.stringify(friendrequests) || JSON.stringify(user.friendrequests),
         JSON.stringify(friends) || JSON.stringify(user.friends), email]);
     if (results) res.status(200).send(`updated user with email: ${email}`);
   } else {

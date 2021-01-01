@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  View, StyleSheet, StatusBar,
+  View, StyleSheet, StatusBar, Text, Alert,
 } from 'react-native';
 import axios from 'axios';
+import { withNavigationFocus } from 'react-navigation';
 import FriendSideBar from '../components/FriendSideBar';
 import FriendChat from '../components/FriendChat';
-import TopFriends from '../components/TopFriends';
+// import TopFriends from '../components/TopFriends';
 import FriendSearchBar from '../components/FriendSearchBar';
 import config from '../../../config';
 
@@ -26,13 +27,8 @@ const styles = StyleSheet.create({
     margin: 20,
   },
 });
-const FriendsScreen = ({ navigation }) => {
+const FriendsScreen = ({ navigation, isFocused }) => {
   // eslint-disable-next-line no-unused-vars
-  const [friendLists, setFriendLists] = React.useState([
-    // { id: 1, name: 'Friend1', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-    // { id: 2, name: 'Friend2', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-    // { id: 3, name: 'Friend3', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-  ]);
   const [searchResults, setSearchResults] = React.useState(null);
   const [currentFriend, setCurrentFriend] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState(null);
@@ -62,8 +58,20 @@ const FriendsScreen = ({ navigation }) => {
       .catch((e) => console.warn(e.message));
   };
 
+  const checkFriend = (email, arr) => {
+    if (!arr && !email) return;
+    return arr.find((friend) => friend.email === email);
+  };
+
   const sendFriendRequest = (data) => {
-    // reset prev results
+    // check if request has been already sent
+    const requestSent = checkFriend(data.email, userInfo.friendrequests);
+    if (!requestSent) return Alert.alert('Error!', 'Friend request was already sent!');
+
+    // check if friend already
+    const alreadyFriend = checkFriend(data.email, userInfo.friends);
+    if (!alreadyFriend) return Alert.alert('Error!', 'You are already friend!');
+
     axios.get(
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
@@ -81,32 +89,38 @@ const FriendsScreen = ({ navigation }) => {
 
   React.useEffect(() => {
     getCurrentUserInfo();
-  }, []);
+  }, [isFocused]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <StatusBar
         barStyle="dark-content"
       />
       <View>
-        <TopFriends />
+        {/* <TopFriends /> */}
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
         <View style={styles.chatWrapper}>
           <FriendSideBar
             friendLists={userInfo && userInfo.friends}
             onFriendPress={onFriendPressHandler}
           />
-          <FriendChat currentFriend={currentFriend} />
         </View>
-        <FriendSearchBar
-          searchFriend={searchFriend}
-          searchResults={searchResults}
-          sendFriendRequest={sendFriendRequest}
-        />
+        <View style={{ flexDirection: 'column', flex: 1 }}>
+
+          <FriendSearchBar
+            searchFriend={searchFriend}
+            searchResults={searchResults}
+            sendFriendRequest={sendFriendRequest}
+          />
+          {
+            currentFriend
+          && <FriendChat me={userInfo} currentFriend={currentFriend} />
+}
+        </View>
       </View>
     </View>
   );
 };
 
-export default FriendsScreen;
+export default withNavigationFocus(FriendsScreen);
