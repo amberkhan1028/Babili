@@ -12,27 +12,46 @@ import config from '../../../config';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
-  searchText: { color: 'white' },
+  searchText: {
+    color: 'white' },
   addButton: {
-    backgroundColor: '#147EFB', marginBottom: 5, justifyContent: 'center', paddingHorizontal: 5,
+    backgroundColor: '#147EFB',
+    marginTop: '5%',
+    marginBottom: '5%',
+    marginRight: '5%',
+    justifyContent: 'center',
+    paddingHorizontal: '5%',
+    borderRadius: 25,
+  },
+  friendReqContainer: {
+    marginLeft: '5%',
+  },
+  image: {
+    width: '60%',
+    height: '78%',
+    borderRadius: 30,
+    // alignSelf: 'center',
+    marginLeft: '20%',
+  },
+  notifText: {
+    marginTop: '2%',
+    marginBottom: '5%',
+    justifyContent: 'center',
+    marginLeft: '5%',
+  },
+  text: {
+    justifyContent: 'center',
+    marginLeft: '20%',
+    marginTop: '2%',
   },
 });
 
-const FriendRequests = ({ currentUserEmail }) => {
-  const [userInfo, setUserInfo] = React.useState(null);
-
-  const getCurrentUserInfo = () => {
-    axios.get(
-      `${config.BASE_URL}/user/${currentUserEmail}`,
-    ).then((res) => setUserInfo(res.data))
-      .catch((e) => console.warn(e.message));
-  };
+const FriendRequests = ({ userInfo }) => {
   const updateFriend = (email, data) => {
     axios.patch(
       `${config.BASE_URL}/user/${email}`, data,
-    ).then((res) => alert(res.data))
+    ).then((res) => console.warn(res))
       .catch((e) => alert(e.message));
   };
   const acceptFriendRequest = (data) => {
@@ -41,11 +60,9 @@ const FriendRequests = ({ currentUserEmail }) => {
       email }) => email === data.email);
     const removeFromFriendRequestIndex = userInfo.friendrequests.findIndex(({
       email }) => email === data.email);
-    // const addFriend = [userSendingRequest, ...userGettingRequest.friendrequests];
-    console.warn('REMOVE FROM FRIEND REQ=>', removeFromFriendRequestIndex);
+
     userInfo.friendrequests.splice(removeFromFriendRequestIndex, 1);
-    console.warn('USER FRIEND REQ=>', userInfo.friendrequests);
-    const addFriend = [...removeFromFriendRequest, ...userInfo.friends];
+    const addFriend = [...removeFromFriendRequest, ...userInfo.friends || []];
     // send friend request to the server to handle
     updateFriend(userInfo.email, {
       friendrequests: [...userInfo.friendrequests],
@@ -56,39 +73,43 @@ const FriendRequests = ({ currentUserEmail }) => {
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
       const userSendingRequest = res.data;
-      // console.warn('USER SENDING REQ RESP=>', userSendingRequest);
       const currentUserInfo = { name: userInfo.name, email: userInfo.email, image: userInfo.image };
-      console.warn(currentUserInfo, 'CURRENT');
       // update the friend lists of the user that sent request
-      const updateFriendList = [...currentUserInfo, ...userSendingRequest.friends];
-      updateFriend(data.email, { friends: updateFriendList });
+      const updateFriendList = [currentUserInfo, ...userSendingRequest.friends];
+      axios.patch(
+        `${config.BASE_URL}/user/${data.email}`, { friends: updateFriendList },
+      ).then(() => alert('friend req accepted'));
     });
   };
-
-  React.useEffect(() => {
-    getCurrentUserInfo();
-  }, []);
 
   return (
     <View>
       {
-        userInfo && userInfo.friendrequests.map(({ image, username, email }) => (
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View>
-              <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
-              <Text>{username}</Text>
+        (userInfo && userInfo.friendrequests.length > 0)
+          ? userInfo.friendrequests.map(({ image, username, email }) => (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={styles.friendReqContainer}>
+                <Image style={styles.image} source={{ uri: image }} />
+                <Text style={styles.notifText}>{username}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => acceptFriendRequest({ username, email, image })}
+              >
+                <Text style={styles.searchText}>accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addButton}
+              >
+                <Text style={styles.searchText}>decline</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => acceptFriendRequest({ username, email, image })}
-            >
-              <Text style={styles.searchText}>Accept Request</Text>
-            </TouchableOpacity>
-          </View>
-        ))
+          ))
+          : (<Text style={styles.text}>No friend requests at the moment.</Text>)
       }
     </View>
   );
 };
 
 export default FriendRequests;
+

@@ -49,7 +49,7 @@ const AppStack = createBottomTabNavigator({
         iconName = focused ? 'account' : 'account';
       }
 
-      return (<Icon name={iconName} size={25} color={tintColor} />);
+      return (<Icon name={iconName} size={45} color={tintColor} />);
     },
   }),
   tabBarOptions: {

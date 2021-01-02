@@ -57,10 +57,10 @@ export default function LoginScreen({ navigation: { navigate } }) {
         );
           // ...and sign in with that credit
         const result = await firebase.auth().signInWithCredential(credential);
-        console.warn('user signed in');
+        console.warn('user signed in', result);
         // if user is new add info to fb and postgreSql
         if (result.additionalUserInfo.isNewUser) {
-          await firebase.database().ref(`/users/${result.user.uid}`)
+          firebase.database().ref(`/users/${result.user.uid}`)
             .set({
               gmail: result.user.email,
               profile_picture: result.additionalUserInfo.profile.picture,
@@ -68,7 +68,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
               last_name: result.additionalUserInfo.profile.family_name,
               created_at: Date.now(),
             });
-          await axios.post(`${config.BASE_URL}/login`, {
+          await axios.post(`https://babili.loca.lt/login`, {
             email: result.user.email,
             name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
             photoUrl: result.additionalUserInfo.profile.picture,
@@ -123,3 +123,4 @@ export default function LoginScreen({ navigation: { navigate } }) {
     </View>
   );
 }
+

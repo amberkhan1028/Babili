@@ -1,12 +1,14 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  View, StyleSheet, StatusBar,
+  View, StyleSheet, StatusBar, Alert,
 } from 'react-native';
 import axios from 'axios';
+import { withNavigationFocus } from 'react-navigation';
 import FriendSideBar from '../components/FriendSideBar';
 import FriendChat from '../components/FriendChat';
-import TopFriends from '../components/TopFriends';
+// import TopFriends from '../components/TopFriends';
 import FriendSearchBar from '../components/FriendSearchBar';
 import config from '../../../config';
 
@@ -26,13 +28,8 @@ const styles = StyleSheet.create({
     margin: 20,
   },
 });
-const FriendsScreen = ({ navigation }) => {
+const FriendsScreen = ({ navigation, isFocused }) => {
   // eslint-disable-next-line no-unused-vars
-  const [friendLists, setFriendLists] = React.useState([
-    // { id: 1, name: 'Friend1', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-    // { id: 2, name: 'Friend2', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-    // { id: 3, name: 'Friend3', img: 'https://i.redd.it/v0caqchbtn741.jpg' },
-  ]);
   const [searchResults, setSearchResults] = React.useState(null);
   const [currentFriend, setCurrentFriend] = React.useState(null);
   const [userInfo, setUserInfo] = React.useState(null);
@@ -62,51 +59,69 @@ const FriendsScreen = ({ navigation }) => {
       .catch((e) => console.warn(e.message));
   };
 
+  const checkFriend = (email, arr) => {
+    if (!arr && !email) return;
+    if (arr === null) return;
+    return arr.find((friend) => friend.email === email);
+  };
+
   const sendFriendRequest = (data) => {
-    // reset prev results
     axios.get(
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
       const userGettingRequest = res.data;
+
+      const requestSent = checkFriend(userInfo.email, userGettingRequest.friendrequests);
+      if (requestSent) return Alert.alert('Error!', 'friend request was already sent');
+
+      const alreadyFriend = checkFriend(userInfo.email, userGettingRequest.friends);
+      if (alreadyFriend) return Alert.alert('Error!', 'user is already your friend');
+
       const userSendingRequest = {
         username: userInfo.username,
         email: userInfo.email,
         image: userInfo.image,
       };
       const makeFriend = [userSendingRequest, ...userGettingRequest.friendrequests || []];
-      // Sending friend request to the server to handle
+
       updateFriend(userGettingRequest.email, { friendrequests: makeFriend });
     }).catch((e) => console.warn(e.message));
   };
 
   React.useEffect(() => {
     getCurrentUserInfo();
-  }, []);
+  }, [isFocused]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <StatusBar
         barStyle="dark-content"
       />
       <View>
-        <TopFriends />
+        {/* <TopFriends /> */}
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
         <View style={styles.chatWrapper}>
           <FriendSideBar
             friendLists={userInfo && userInfo.friends}
             onFriendPress={onFriendPressHandler}
           />
-          <FriendChat currentFriend={currentFriend} />
         </View>
-        <FriendSearchBar
-          searchFriend={searchFriend}
-          searchResults={searchResults}
-          sendFriendRequest={sendFriendRequest}
-        />
+        <View style={{ flexDirection: 'column', flex: 1 }}>
+
+          <FriendSearchBar
+            searchFriend={searchFriend}
+            searchResults={searchResults}
+            sendFriendRequest={sendFriendRequest}
+          />
+          {
+            currentFriend
+          && <FriendChat me={userInfo} currentFriend={currentFriend} />
+}
+        </View>
       </View>
     </View>
   );
 };
 
-export default FriendsScreen;
+export default withNavigationFocus(FriendsScreen);

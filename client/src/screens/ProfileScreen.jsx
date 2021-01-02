@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView, TouchableOpacity, Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { withNavigationFocus } from 'react-navigation';
+import firebase from 'firebase';
 import config from '../../../config';
 import FriendRequests from '../components/FriendRequests';
 
@@ -26,9 +28,9 @@ const styles = StyleSheet.create({
     color: '#F42B03',
   },
   image: {
-    width: '30%',
-    height: '60%',
-    borderRadius: 80,
+    width: '25%',
+    height: '50%',
+    borderRadius: 40,
     alignSelf: 'center',
   },
   textInput: {
@@ -43,23 +45,30 @@ const styles = StyleSheet.create({
   inputContainer: {
     paddingTop: 15,
   },
+  subHeader: {
+    margin: 5,
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#0f9535',
+    fontWeight: 'bold',
+  },
 });
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation, isFocused }) => {
   const [userInfo, setUserInfo] = useState(null);
 
   const fetchUser = () => {
-    axios.get(
-      `${config.BASE_URL}/user/`,
-    ).then((res) => setUserInfo(res.data))
-      .catch((e) => console.warn('1', e.message));
+    const user = firebase.auth().currentUser;
+    axios.get(`${config.BASE_URL}/user/${user.email}`)
+      .then((res) => setUserInfo(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
   const updateUser = (data) => {
     axios.patch(
       `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
-    ).then((res) => console.warn('2', res.data))
-      .catch((e) => console.warn('3', e.message));
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
   const {
@@ -72,12 +81,12 @@ const ProfileScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [isFocused]);
 
   return (
 
     <View style={styles.container}>
-      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 4 }}>
+      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 1 }}>
         <StatusBar
           barStyle="dark-content"
         />
@@ -118,10 +127,7 @@ const ProfileScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Text style={{
-          margin: 5, fontSize: 20, color: '#0f9535', fontWeight: 'bold',
-        }}
-        >
+        <Text style={styles.subHeader}>
           🎌Country of origin
         </Text>
         <Controller
@@ -171,12 +177,13 @@ const ProfileScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      <ScrollView style={{ flex: 1 }}>
-        <Text>Friend Requests</Text>
-        <FriendRequests />
+      {/* <Button onPress={handleSubmit(onSubmit)} title="submit" /> */}
+      <Text style={styles.subHeader} subHeader>Friend Requests</Text>
+      <ScrollView>
+        <FriendRequests userInfo={userInfo} />
       </ScrollView>
     </View>
   );
 };
 
-export default ProfileScreen;
+export default withNavigationFocus(ProfileScreen);
