@@ -12,11 +12,38 @@ import config from '../../../config';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
-  searchText: { color: 'white' },
+  searchText: {
+    color: 'white' },
   addButton: {
-    backgroundColor: '#147EFB', marginBottom: 5, justifyContent: 'center', paddingHorizontal: 5,
+    backgroundColor: '#147EFB',
+    marginTop: '5%',
+    marginBottom: '5%',
+    marginRight: '5%',
+    justifyContent: 'center',
+    paddingHorizontal: '5%',
+    borderRadius: 25,
+  },
+  friendReqContainer: {
+    marginLeft: '5%',
+  },
+  image: {
+    width: '60%',
+    height: '78%',
+    borderRadius: 30,
+    // alignSelf: 'center',
+    marginLeft: '20%',
+  },
+  notifText: {
+    marginTop: '2%',
+    marginBottom: '5%',
+    justifyContent: 'center',
+    marginLeft: '5%',
+  },
+  text: {
+    justifyContent: 'center',
+    marginLeft: '20%',
+    marginTop: '2%',
   },
 });
 
@@ -61,27 +88,28 @@ const FriendRequests = ({ userInfo }) => {
         (userInfo && userInfo.friendrequests.length > 0)
           ? userInfo.friendrequests.map(({ image, username, email }) => (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <View>
-                <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
-                <Text>{username}</Text>
+              <View style={styles.friendReqContainer}>
+                <Image style={styles.image} source={{ uri: image }} />
+                <Text style={styles.notifText}>{username}</Text>
               </View>
               <TouchableOpacity
                 style={styles.addButton}
                 onPress={() => acceptFriendRequest({ username, email, image })}
               >
-                <Text style={styles.searchText}>Accept</Text>
+                <Text style={styles.searchText}>accept</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.addButton}
               >
-                <Text style={styles.searchText}>Decline</Text>
+                <Text style={styles.searchText}>decline</Text>
               </TouchableOpacity>
             </View>
           ))
-          : (<Text>No friend requests at the moment</Text>)
+          : (<Text style={styles.text}>No friend requests at the moment.</Text>)
       }
     </View>
   );
 };
 
 export default FriendRequests;
+

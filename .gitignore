@@ -12,5 +12,7 @@ npm-debug.*
 web-build/
 .eslintcache
 .npm
+pusher.json
+
 # macOS
 .DS_Store
