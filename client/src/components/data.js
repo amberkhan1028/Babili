@@ -1,21 +1,102 @@
 export default [
   {
-    id: 1,
-    name: 'apple',
-    img: 'https://www.applesfromny.com/wp-content/uploads/2020/08/McIntosh_NYAS-Apples.png',
-    is_open: false,
+    question: 'A carrot is a(n)...',
+    answers: [
+      'vegetable',
+      'fruit',
+      'sport',
+      'animal',
+    ],
+    correctAnswer: 'vegetable',
   },
   {
-    id: 2,
-    name: 'apple',
-    img: 'https://logodix.com/logo/313588.png',
-    is_open: false,
+    question: 'green is a(n)...',
+    answers: [
+      'instrument',
+      'fruit',
+      'color',
+      'animal',
+    ],
+    correctAnswer: 'color',
   },
   {
-    id: 3,
-    name: 'banana',
-    img:
-      'https://api.time.com/wp-content/uploads/2019/11/gettyimages-459761948.jpg?w=734&quality=85',
-    is_open: false,
+    question: 'apples are a(n)...',
+    answers: [
+      'animal',
+      'vegetable',
+      'fruit',
+      'accessory',
+    ],
+    correctAnswer: 'fruit',
+  },
+  {
+    question: 'football is a(n)...',
+    answers: [
+      'vegetable',
+      'sport',
+      'fruit',
+      'animal',
+    ],
+    correctAnswer: 'sport',
+  },
+  {
+    question: 'The word beautiful is a(n)...',
+    answers: [
+      'insult',
+      'fruit',
+      'compliment',
+      'animal',
+    ],
+    correctAnswer: 'compliment',
+  },
+  {
+    question: 'A phone is a(n)...',
+    answers: [
+      'electronic device',
+      'fruit',
+      'sport',
+      'animal',
+    ],
+    correctAnswer: 'electronic device',
+  },
+  {
+    question: 'A shirt is a(n)...',
+    answers: [
+      'vegetable',
+      'type of phone',
+      'sport',
+      'piece of clothing',
+    ],
+    correctAnswer: 'piece of clothing',
+  },
+  {
+    question: 'shoes belong on',
+    answers: [
+      'your hands',
+      'your feet',
+      'your chest',
+      'your bottom',
+    ],
+    correctAnswer: 'your feet',
+  },
+  {
+    question: 'Monday is a(an)',
+    answers: [
+      'day of the week',
+      'food item',
+      'piece of clothing',
+      'animal',
+    ],
+    correctAnswer: 'day of the week',
+  },
+  {
+    question: 'a hat belongs on',
+    answers: [
+      'your face',
+      'your hand',
+      'your head',
+      'your bottom',
+    ],
+    correctAnswer: 'your head',
   },
 ];

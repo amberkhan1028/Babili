@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import {
-  View, Text, TextInput, StyleSheet, StatusBar, Button, Image, ScrollView,
+  View, Text, TextInput, StyleSheet, StatusBar, Image, ScrollView,
   KeyboardAvoidingView, TouchableOpacity, Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     color: '#F42B03',
   },
   image: {
-    width: '25%',
-    height: '50%',
-    borderRadius: 40,
+    width: '30%',
+    height: '60%',
+    borderRadius: 80,
     alignSelf: 'center',
   },
   textInput: {
@@ -77,7 +77,7 @@ const ProfileScreen = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
-      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 1 }}>
+      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 4 }}>
         <StatusBar
           barStyle="dark-content"
         />
@@ -171,9 +171,8 @@ const ProfileScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      <Button onPress={handleSubmit(onSubmit)} title="submit" />
-      <Text>Friend Requests</Text>
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
+        <Text>Friend Requests</Text>
         <FriendRequests />
       </ScrollView>
     </View>

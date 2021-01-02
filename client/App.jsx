@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
@@ -71,6 +70,7 @@ const navigator = createStackNavigator({
   Document: DocumentScreen,
   Object: ObjectDetectionScreen,
   Quiz: QuizScreen,
+  Profile: ProfileScreen,
   Home: AppStack,
 }, {
   initialRouteName: 'Loading',
