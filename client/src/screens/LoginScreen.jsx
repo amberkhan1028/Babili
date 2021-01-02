@@ -68,7 +68,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
               last_name: result.additionalUserInfo.profile.family_name,
               created_at: Date.now(),
             });
-          await axios.post(`https://babili.loca.lt/login`, {
+          await axios.post(`${config.BASE_URL}`, {
             email: result.user.email,
             name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
             photoUrl: result.additionalUserInfo.profile.picture,

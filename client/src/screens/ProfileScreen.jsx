@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import {
-  View, Text, TextInput, StyleSheet, StatusBar, Button, Image, ScrollView,
+  View, Text, TextInput, StyleSheet, StatusBar, Image, ScrollView,
   KeyboardAvoidingView, TouchableOpacity, Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -54,7 +54,7 @@ const ProfileScreen = ({ navigation, isFocused }) => {
     const user = firebase.auth().currentUser;
     axios.get(`${config.BASE_URL}/user/${user.email}`)
       .then((res) => setUserInfo(res.data))
-      .catch((e) => alert(e.message));
+      .catch((e) => console.warn(e.message));
   };
 
   const updateUser = (data) => {

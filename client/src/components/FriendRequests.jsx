@@ -24,7 +24,7 @@ const FriendRequests = ({ userInfo }) => {
   const updateFriend = (email, data) => {
     axios.patch(
       `${config.BASE_URL}/user/${email}`, data,
-    ).then((res) => console.log('done'))
+    ).then((res) => console.warn(res))
       .catch((e) => alert(e.message));
   };
   const acceptFriendRequest = (data) => {
@@ -50,40 +50,35 @@ const FriendRequests = ({ userInfo }) => {
       // update the friend lists of the user that sent request
       const updateFriendList = [currentUserInfo, ...userSendingRequest.friends];
       axios.patch(
-        `${config.BASE_URL}/user/${data.email}`, { friends: updateFriendList }
-      ).then(() => alert("Done with all!!!"))
-      //updateFriend(data.email, { friends: updateFriendList});
+        `${config.BASE_URL}/user/${data.email}`, { friends: updateFriendList },
+      ).then(() => alert('friend req accepted'));
     });
-  };
-
-  const declineFriendRequest = data => {
-    // const removeFromFriendRequest = userInfo.
   };
 
   return (
     <View>
       {
-        (userInfo && userInfo.friendrequests.length > 0) ?
-         userInfo.friendrequests.map(({ image, username, email }) => (
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View>
-              <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
-              <Text>{username}</Text>
+        (userInfo && userInfo.friendrequests.length > 0)
+          ? userInfo.friendrequests.map(({ image, username, email }) => (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View>
+                <Image style={{ width: 30, height: 30 }} source={{ uri: image }} />
+                <Text>{username}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => acceptFriendRequest({ username, email, image })}
+              >
+                <Text style={styles.searchText}>Accept</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addButton}
+              >
+                <Text style={styles.searchText}>Decline</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => acceptFriendRequest({ username, email, image })}
-            >
-              <Text style={styles.searchText}>Accept</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.addButton}
-            >
-              <Text style={styles.searchText}>Decline</Text>
-            </TouchableOpacity>
-          </View>
-        ))
-          : (<Text>No Friend Requests Yet!</Text>)
+          ))
+          : (<Text>No friend requests at the moment</Text>)
       }
     </View>
   );

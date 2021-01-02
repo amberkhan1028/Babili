@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
   res.status(201).send({ error: false, message: 'user added successfully!' });
 });
 
-// search user
+// search for a user
 router.get('/user/search/', async (req, res) => {
   const { q } = req.query;
   const searchQuery = 'SELECT * FROM Users WHERE email LIKE $1 OR username LIKE $1';
@@ -57,7 +57,7 @@ router.get('/user/:email', async (req, res) => {
   res.status(404).send({ error: true, message: 'user with given email not found' });
 });
 
-// finds a user based on email and update their profile info
+// find a user based on email and update their profile info
 router.patch('/user/:email', async (req, res) => {
   const { email } = req.params;
   const {
@@ -67,8 +67,6 @@ router.patch('/user/:email', async (req, res) => {
     friendrequests,
     friends,
   } = req.body;
-
-  console.log("UPDATING 4RM SERVER==.", req.body);
 
   // update query
   const updateQuery = 'UPDATE users SET country = $1, language = $2, aboutme = $3, friendrequests = $4, friends = $5  WHERE email = $6';

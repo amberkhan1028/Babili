@@ -1,7 +1,8 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  View, StyleSheet, StatusBar, Text, Alert,
+  View, StyleSheet, StatusBar, Alert,
 } from 'react-native';
 import axios from 'axios';
 import { withNavigationFocus } from 'react-navigation';
@@ -60,29 +61,29 @@ const FriendsScreen = ({ navigation, isFocused }) => {
 
   const checkFriend = (email, arr) => {
     if (!arr && !email) return;
+    if (arr === null) return;
     return arr.find((friend) => friend.email === email);
   };
 
   const sendFriendRequest = (data) => {
-    // check if request has been already sent
-    const requestSent = checkFriend(data.email, userInfo.friendrequests);
-    if (!requestSent) return Alert.alert('Error!', 'Friend request was already sent!');
-
-    // check if friend already
-    const alreadyFriend = checkFriend(data.email, userInfo.friends);
-    if (!alreadyFriend) return Alert.alert('Error!', 'You are already friend!');
-
     axios.get(
       `${config.BASE_URL}/user/${data.email}`,
     ).then((res) => {
       const userGettingRequest = res.data;
+
+      const requestSent = checkFriend(userInfo.email, userGettingRequest.friendrequests);
+      if (requestSent) return Alert.alert('Error!', 'friend request was already sent');
+
+      const alreadyFriend = checkFriend(userInfo.email, userGettingRequest.friends);
+      if (alreadyFriend) return Alert.alert('Error!', 'user is already your friend');
+
       const userSendingRequest = {
         username: userInfo.username,
         email: userInfo.email,
         image: userInfo.image,
       };
       const makeFriend = [userSendingRequest, ...userGettingRequest.friendrequests || []];
-      // Sending friend request to the server to handle
+
       updateFriend(userGettingRequest.email, { friendrequests: makeFriend });
     }).catch((e) => console.warn(e.message));
   };

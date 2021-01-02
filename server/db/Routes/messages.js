@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-unused-vars */
 const { Router } = require('express');
 const Pusher = require('pusher');
 
@@ -18,7 +20,7 @@ db.connect()
 
 router.put('/users/:email', (req, res) => {
   const { name } = req.body;
-  console.log(`User is online: ${req.params.email}`);
+  console.warn(`User is online: ${req.params.email}`);
   const online = async () => {
     await db.query(
       'UPDATE users SET online = \'true\' WHERE email = $1', [req.params.email],
@@ -50,8 +52,6 @@ router.delete('/users/:email', (req, res) => {
 router.post('/users/messages', (req, res) => {
   console.warn(`User ${req.params.email} sent message: ${req.body.message}`);
   const { message, receiver } = req.body;
-  console.log('SENDER==>', message.user);
-  console.log('RECEIVER==>', receiver);
 
   const insertMessage = async () => {
     const { rows } = await db.query(
@@ -59,7 +59,6 @@ router.post('/users/messages', (req, res) => {
     );
   };
   insertMessage();
-  // console.log("url", `private_message_${receiver._id}_${message.user._id}`);
   pusherClient.trigger('chat_channel', 'message', { message, receiver });
   res.sendStatus(201);
 });
