@@ -1,8 +1,8 @@
 /* eslint-disable import/no-unresolved */
 import {
   PUSHER_APP_ID,
-  GOOGLE_AND,
   OCR,
+  GOOGLE_AND,
   GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
   BASE_URL,
@@ -22,8 +22,8 @@ const firebaseConfig = {
 };
 export default {
   PUSHER_APP_ID,
-  GOOGLE_IOS,
   BASE_URL,
+  GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
   DIALOG_FLOW_PRIVATE_KEY,
   DIALOG_FLOW_PROJECT_ID,
