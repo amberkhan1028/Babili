@@ -148,7 +148,7 @@ const ProfileScreen = ({ navigation, isFocused }) => {
             <TextInput
               onChangeText={(text) => onChange(text)}
               value={value}
-              defaultValue=""
+              defaultValue={userInfo && userInfo.aboutme}
               placeholder="about me"
               multiline
               numberOfLines={10}
