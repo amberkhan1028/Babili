@@ -24,7 +24,7 @@ const QuizScreen = ({ navigation: { navigate } }) => {
   const [ currNum, setCurrNum ] = useState(0);
   const [ quizOver, setQuizOver ] = useState(false);
 
-  
+
   const answerSelected = (answer, i) => {
     if (!quizOver) {
       const answerIsCorrect = allQuestions[ currNum ].correctAnswer === answer;
@@ -38,10 +38,10 @@ const QuizScreen = ({ navigation: { navigate } }) => {
         answerIsCorrect,
         correctAnswer: allQuestions[ currNum ].correctAnswer
       }
-      
+
       setUserSelectedAnswers((currentAnswers)=> [...currentAnswers, currentAnswerObj])
     }
-    
+
   }
 
   const nextQuestion = () => {
@@ -62,13 +62,13 @@ const QuizScreen = ({ navigation: { navigate } }) => {
       }
     }
   })
-  
+
   useEffect(() => {
     if (userSelectedAnswers.length) {
       nextQuestion()
     }
   }, [userSelectedAnswers])
-  
+
   useEffect(() => {
     setAllQuestions(questions.sort(()=> 0.5 - Math.random()))
   }, [])
@@ -79,13 +79,13 @@ const QuizScreen = ({ navigation: { navigate } }) => {
       finishedValue.setValue(1)
     }
   }, [ quizOver ])
-  
+
   const finished = withSpringTransition(finishedValue, {
     ...SpringUtils.makeDefaultConfig(),
     overshootClamping: true,
     damping: new Value(10)
   })
-  
+
   return (
     <QuestionContainer>
       <Box style={{flex: 1}}>
@@ -117,7 +117,7 @@ const QuizScreen = ({ navigation: { navigate } }) => {
             width: width * allQuestions.length,
             flexDirection: 'row',
             transform: [ { translateX: multiply(x, -1) } ],
-        
+
           }}
           >
             { allQuestions.map(({ answers }, i) => (
@@ -147,7 +147,7 @@ const QuizScreen = ({ navigation: { navigate } }) => {
                       justifyContent: 'center',
                       borderRadius: 15,
                     } }
-                    
+
                     onPress={ nextQuestion }
                   >
                     <Text style={ { color: 'white', textTransform: 'uppercase', fontSize: 18, textAlign: 'center' } }>{ last ? 'submit' : 'next' }</Text>

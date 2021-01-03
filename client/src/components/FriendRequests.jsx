@@ -85,7 +85,7 @@ const FriendRequests = ({ userInfo }) => {
   return (
     <View>
       {
-        (userInfo && userInfo.friendrequests.length > 0)
+        (userInfo && userInfo.friendrequests && userInfo.friendrequests.length > 0)
           ? userInfo.friendrequests.map(({ image, username, email }) => (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={styles.friendReqContainer}>
@@ -106,10 +106,11 @@ const FriendRequests = ({ userInfo }) => {
             </View>
           ))
           : (<Text style={styles.text}>No friend requests at the moment.</Text>)
-      }
+    }
     </View>
   );
 };
 
 export default FriendRequests;
+
 

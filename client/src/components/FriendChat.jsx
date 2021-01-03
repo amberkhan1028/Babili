@@ -23,10 +23,10 @@ const FriendChat = ({ currentFriend, me }) => {
     const pusher = new Pusher(pusherConfig.key, pusherConfig);
     const chatChannel = pusher.subscribe('chat_channel');
     chatChannel.bind('pusher:subscription_succeeded', () => {
-      console.warn('subscription to my channel ok!');
+      console.warn('subscription to channel ok!');
     });
     chatChannel.bind('pusher:subscription_error', () => {
-      console.warn('subscription to my channel error!');
+      console.warn('subscription to channel error!');
     });
     chatChannel.bind('join', ({ name }) => console.warn(`${name} joined the chat`));
     chatChannel.bind('message', ({ message, receiver }) => {
@@ -52,6 +52,7 @@ const FriendChat = ({ currentFriend, me }) => {
       messages={messages}
       onSend={(messages) => onSend(messages)}
       user={{ _id: me.email, name: me.username, avatar: me.image }}
+      showUserAvatar
     />
   );
 };
