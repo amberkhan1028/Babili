@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
 
 const ProfileScreen = ({ navigation, isFocused }) => {
   const [userInfo, setUserInfo] = useState(null);
+  const user = firebase.auth().currentUser;
 
   const fetchUser = () => {
-    const user = firebase.auth().currentUser;
     axios.get(`${config.BASE_URL}/user/${user.email}`)
       .then((res) => setUserInfo(res.data))
       .catch((e) => console.warn(e.message));
@@ -93,12 +93,11 @@ const ProfileScreen = ({ navigation, isFocused }) => {
         <Text
           style={styles.header}
         >
-          {' '}
-          User Profile
+          {`${user.displayName}`}
         </Text>
         <Image
           source={{
-            uri: 'https://i.redd.it/v0caqchbtn741.jpg',
+            uri: user.photoURL,
           }}
           style={styles.image}
         />
