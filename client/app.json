@@ -3,8 +3,13 @@
     "name": "Babili",
     "slug": "Babili",
     "version": "1.0.0",
+    "sdkVersion": "17.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
+    "facebookScheme": "fb172606111272117",
+    "facebookAppId": "172606111272117",
+    "facebookDisplayName":"babili",
+    "facebookAutoInitEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,17 +21,19 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": ["CAMERA"],
+      "useNextNotificationsApi": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
+    },
+    "extra":{
+      "myApiKey": "1125913"
     }
   }
 }

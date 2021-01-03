@@ -15,24 +15,22 @@ const styles = StyleSheet.create({
   face: {
     borderRadius: 3,
     fontSize: 50,
-    height: 200,
-    width: 200,
-    margin: 5,
+    height: 100,
+    width: 100,
 
   },
   back: {
     backgroundColor: '#ff0000',
     borderRadius: 3,
     fontSize: 50,
-    height: 200,
-    width: 200,
-    margin: 5,
+    height: 100,
+    width: 100,
     justifyContent: 'center',
     textAlign: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
   },
 
 });
@@ -98,11 +96,11 @@ const MatchingGameScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <View>
-        {renderCards(data) }
-
+        <Header />
       </View>
+      {renderCards(data) }
+
     </View>
   );
 };
