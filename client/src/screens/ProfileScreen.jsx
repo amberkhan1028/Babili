@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
   inputContainer: {
     paddingTop: 15,
   },
+  subHeader: {
+    margin: 5,
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#0f9535',
+    fontWeight: 'bold',
+  },
 });
 
 const ProfileScreen = ({ navigation, isFocused }) => {
@@ -120,10 +127,7 @@ const ProfileScreen = ({ navigation, isFocused }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Text style={{
-          margin: 5, fontSize: 20, color: '#0f9535', fontWeight: 'bold',
-        }}
-        >
+        <Text style={styles.subHeader}>
           🎌Country of origin
         </Text>
         <Controller
@@ -174,7 +178,7 @@ const ProfileScreen = ({ navigation, isFocused }) => {
         </TouchableOpacity>
       </KeyboardAvoidingView>
       {/* <Button onPress={handleSubmit(onSubmit)} title="submit" /> */}
-      <Text>Friend Requests</Text>
+      <Text style={styles.subHeader} subHeader>Friend Requests</Text>
       <ScrollView>
         <FriendRequests userInfo={userInfo} />
       </ScrollView>

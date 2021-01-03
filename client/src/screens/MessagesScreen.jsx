@@ -3,11 +3,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { Platform } from 'react-native';
-import firebase from 'firebase';
 import { Dialogflow_V2 } from 'react-native-dialogflow-text';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import firebase from 'firebase';
 import config from '../../../config';
 
 export default function MessagesScreen() {

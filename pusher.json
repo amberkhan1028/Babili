@@ -1,8 +1,8 @@
 {
-  "appId": "1128531",
-  "key":"c2d4b38d0d9fc4cc24ae",
-  "secret": "2ce0724e441a5e3a1278",
-  "cluster":"mt1",
-  "serverEndpoint": "https://babili.loca.lt",
+  "appId": "",
+  "key":"",
+  "secret": "",
+  "cluster":"",
+  "serverEndpoint": "",
   "encrypted":true
 }

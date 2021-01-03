@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
@@ -49,7 +51,7 @@ const AppStack = createBottomTabNavigator({
         iconName = focused ? 'account' : 'account';
       }
 
-      return (<Icon name={iconName} size={45} color={tintColor} />);
+      return (<Icon name={iconName} size={25} color={tintColor} />);
     },
   }),
   tabBarOptions: {
