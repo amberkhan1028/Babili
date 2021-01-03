@@ -46,30 +46,32 @@ export default function MessagesScreen() {
       const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
+        // ask for permission
         const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
         finalStatus = status;
+        // if they deny permission
+        if (finalStatus !== 'granted') {
+          console.warn('Failed to get push token for push notification!');
+          return;
+        } // if they give permission
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.warn(token);
+        const currentUser = await firebase.auth().currentUser;
+        firebase
+          .database()
+          .ref(`users/${currentUser.uid}/push_token`)
+          .set(token);
+      } else { // they've already given permission previously
+        console.warn('User has already given permission');
       }
-      if (finalStatus !== 'granted') {
-        console.warn('Failed to get push token for push notification!');
-        return;
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
       }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.warn(token);
-      const currentUser = await firebase.auth().currentUser;
-      firebase
-        .database()
-        .ref(`users/${currentUser.uid}/push_token`)
-        .set(token);
-    } else {
-      console.warn('Must use physical device for Push Notifications');
-    }
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
     }
   };
 
