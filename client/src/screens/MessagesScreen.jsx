@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
@@ -54,7 +55,6 @@ export default function MessagesScreen() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.warn(token);
       const currentUser = await firebase.auth().currentUser;
       firebase
         .database()

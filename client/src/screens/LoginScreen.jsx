@@ -57,7 +57,6 @@ export default function LoginScreen({ navigation: { navigate } }) {
         );
           // ...and sign in with that credit
         const result = await firebase.auth().signInWithCredential(credential);
-        console.warn('user signed in');
         // if user is new add info to fb and postgreSql
         if (result.additionalUserInfo.isNewUser) {
           await firebase.database().ref(`/users/${result.user.uid}`)
@@ -79,8 +78,6 @@ export default function LoginScreen({ navigation: { navigate } }) {
             last_logged_in: Date.now(),
           });
         }
-      } else {
-        console.warn('User already signed-in Firebase.');
       }
     });
   };
@@ -123,5 +120,3 @@ export default function LoginScreen({ navigation: { navigate } }) {
     </View>
   );
 }
-
-

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, View, Image, Text,
@@ -56,7 +57,6 @@ const MatchingGameScreen = () => {
     const secondMatched = data[openedCard[1]];
 
     if (secondMatched && firstMatched.name === secondMatched.name) {
-      console.warn('matched');
       setMatched([...matched, firstMatched.id]);
     }
 
@@ -72,12 +72,11 @@ const MatchingGameScreen = () => {
     }
     if (matched.includes(card.name)) {
       isFlipped = true;
-      console.warn(isFlipped);
     }
     return (
       <FlipCard
         flipHorizontal
-        onFlipEnd={() => { flipCard(i); console.warn(openedCard); }}
+        onFlipEnd={() => { flipCard(i); }}
         key={card.img}
         style={styles.card}
         clickable

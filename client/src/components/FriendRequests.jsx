@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   searchText: {
     color: 'white' },
   addButton: {
-    backgroundColor: '#147EFB',
+    backgroundColor: '#2E86AB',
     marginTop: '5%',
     marginBottom: '5%',
     marginRight: '5%',
@@ -29,10 +29,9 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '60%',
-    height: '78%',
+    height: '60%',
     borderRadius: 30,
-    // alignSelf: 'center',
-    marginLeft: '20%',
+    marginLeft: '10%',
   },
   notifText: {
     marginTop: '2%',
@@ -87,7 +86,7 @@ const FriendRequests = ({ userInfo }) => {
       {
         (userInfo && userInfo.friendrequests && userInfo.friendrequests.length > 0)
           ? userInfo.friendrequests.map(({ image, username, email }) => (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
               <View style={styles.friendReqContainer}>
                 <Image style={styles.image} source={{ uri: image }} />
                 <Text style={styles.notifText}>{username}</Text>
@@ -112,5 +111,3 @@ const FriendRequests = ({ userInfo }) => {
 };
 
 export default FriendRequests;
-
-
