@@ -112,3 +112,5 @@ const FriendRequests = ({ userInfo }) => {
 };
 
 export default FriendRequests;
+
+

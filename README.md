@@ -1,14 +1,14 @@
 ## Description
 
-Babili is an app aimed at ESL adults and children who wish to improve their conversational English skills in a fun way. 
+Babili is an app aimed at ESL adults and children who wish to improve their conversational English skills in a fun way.
 
-Upon signing in, the user is taken to a chat page where they can practice conversing in English with Devi, a friendly AI bot created using Google's Dialogflow. Through Devi users may add English words to their 'word bank.' 
+Upon signing in, the user is taken to a chat page where they can practice conversing in English with Devi, a friendly AI bot created using Google's Dialogflow. Through Devi users may add English words to their 'word bank.'
 
-Users may also add words to their word bank via the flashcard game. All games are accessible from the games icon. Along with flashcards, the user can play a picture/word matching game which utilizes the words they have added into their word bank. 
+Users may also add words to their word bank via the flashcard game. All games are accessible from the games icon. Along with flashcards, the user can play a picture/word matching game which utilizes the words they have added into their word bank.
 
-Babili also contains an object detection feature. This tool utilizes machine learning and the phone's camera to determine what an object is. After detection, the English and Spanish word are relayed back to the user. 
+Babili also contains an object detection feature. This tool utilizes machine learning and the phone's camera to determine what an object is. After detection, the English and Spanish word are relayed back to the user.
 
-## Dependencies 
+## Dependencies
 
 `"dependencies": {
     "@expo/vector-icons": "^12.0.2",
@@ -107,11 +107,11 @@ Babili also contains an object detection feature. This tool utilizes machine lea
 
   1. Fork the **CSL-CodingAsASecondLanguage/Babili** repo
   2. Clone your **forked repo** into your file system
-  3. Run **npm install** to install dependencies 
+  3. Run **npm install** to install dependencies
     `npm install`
   4. Create a **.env** file in your main director and install the dotenv package
     `npm install dotenv`
-  The .env file will house all of your keys and other sensitive information 
+  The .env file will house all of your keys and other sensitive information
 
 | Variable                    | Description                 |
 | ----------------------------| --------------------------- |
@@ -131,18 +131,27 @@ Babili also contains an object detection feature. This tool utilizes machine lea
 | BASE_URL                    |                             |
 | OCR                         |                             |
 
-  5. Install **expo** and **expo-cli** 
+  5. Install **expo** and **expo-cli**
     `npm install -g expo expo-cli`
   6. Start up the mobile emulator by typing **expo start** in your terminal
     `expo start`
 
-## Database 
+## Database
+The Babili database is powered by PostgreSQL and hosted on ElephantSQL. In order to initiate the connection to the database run npm start in your terminal. If the connection is successful, you'll see the following message in your terminal: db connected.
 
-## API's 
+In order to access the all the database you need to have PostgreSQL installed. You can follow the following tutorial provided by the PostgreSQL team here: https://www.postgresql.org/download/
+
+You can also access the database from the ElephantSQL online portal. To do so, go to https://www.elephantsql.com/ in your browser and login. If you are an authorized user of the Babili database, you'll see the database instance upon login. Click into the instance and select 'Browser' on the left-side menu. Once in the Browser portal, you'll be able to query the database as desired using PSQL commands.
+
+## API's
 
 # Google OAUTH
 
 # Pusher
+Live chat between users and notifications are powered by Pusher. In order to enable functionality of both features, create a Pusher.json file in your directory. Next, go to https://pusher.com/ and create a appID, key, secret, and cluster. Add these values to your Pusher.json file as an object with matching key/val pairs. Also, create a key in your object of "encrypted" and set to true in order to protect your data.
 # DialogFlow
 
-## Deployment 
+## Deployment
+Babili was deployed using Expo. To deploy the app run the following command in your terminal: expo publish.
+
+You'll be prompted with a request to make an account with Expo. Once your account is created your app will be deployed and available for Android users.

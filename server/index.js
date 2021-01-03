@@ -8,6 +8,7 @@ const { Client } = require('pg');
 const { sequelize } = require('./db/index');
 const wordbank = require('./db/Routes/wordBank');
 const messages = require('./db/Routes/messages');
+
 const user = require('./db/Routes/user');
 
 const app = express();
@@ -41,7 +42,6 @@ async function connect() {
 }
 async function init() {
   await connect();
-  // require('./db/Routes/user')(app, db);
   console.warn(`Starting Sequelize + Express on port ${PORT}...`);
   app.listen(PORT, () => {
     console.warn(`Express server started on port ${PORT}.`);
