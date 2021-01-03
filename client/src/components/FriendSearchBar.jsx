@@ -4,8 +4,6 @@ import {
   View, Text, StyleSheet, TextInput, TouchableOpacity,
 } from 'react-native';
 
-// import { AntDesign } from '@expo/vector-icons';
-
 const styles = StyleSheet.create({
   searchBar: {
     justifyContent: 'center',
@@ -16,17 +14,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 25,
     color: '#147EFB',
-    margin: 20,
-    marginBottom: 5,
+    margin: 5,
     paddingHorizontal: 10,
   },
   searchListContainer: {
     height: 200,
     elevation: 1,
     // backgroundColor: '#147EFB',
-    borderRadius: 5,
+    // borderRadius: 5,
+    borderColor: 'white',
     // paddingHorizontal: 10,
-    marginHorizontal: 30,
+    // marginHorizontal: 30,
   },
   searchList: {
     flexDirection: 'row',
@@ -47,14 +45,12 @@ const styles = StyleSheet.create({
 
 function FriendSearchBar({ searchFriend, searchResults, sendFriendRequest }) {
   return (
-    <View>
+    <View style={{ flex: 1, display: 'flex' }}>
       <TextInput
         style={styles.searchBar}
         placeholder=" search for people"
         onChangeText={(text) => searchFriend(text)}
-      >
-        {/* <AntDesign name="search1" size={20} color="#147EFB" /> */}
-      </TextInput>
+      />
       {
         searchResults
       && (
@@ -64,7 +60,7 @@ function FriendSearchBar({ searchFriend, searchResults, sendFriendRequest }) {
             <Text style={styles.searchText}>{username}</Text>
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => sendFriendRequest({ username, email, image })}
+              onPress={() => { sendFriendRequest({ username, email, image }); }}
             >
               <Text style={styles.searchText}> + add friend</Text>
             </TouchableOpacity>

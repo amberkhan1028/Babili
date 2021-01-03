@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
@@ -72,6 +73,24 @@ export default function MessagesScreen() {
           lightColor: '#FF231F7C',
         });
       }
+
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      const currentUser = await firebase.auth().currentUser;
+      firebase
+        .database()
+        .ref(`users/${currentUser.uid}/push_token`)
+        .set(token);
+    } else {
+      console.warn('Must use physical device for Push Notifications');
+    }
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+
     }
   };
 
