@@ -22,8 +22,8 @@ const firebaseConfig = {
 };
 export default {
   PUSHER_APP_ID,
-  GOOGLE_IOS,
   BASE_URL,
+  GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
   DIALOG_FLOW_PRIVATE_KEY,
   GOOGLE_AND,
