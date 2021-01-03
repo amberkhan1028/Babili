@@ -58,7 +58,7 @@ const AppStack = createBottomTabNavigator({
     inactiveTintColor: '#bedfed',
     activeTintColor: '#fec857',
     style: {
-      backgroundColor: '#147EFB',
+      backgroundColor: '#2E86AB',
     },
   },
 });

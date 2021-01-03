@@ -64,11 +64,10 @@ const ProfileScreen = ({ navigation, isFocused }) => {
       .catch((e) => console.warn(e.message));
   };
 
-  const updateUser = (data) => {
-    axios.patch(
+  const updateUser = async (data) => {
+    await axios.patch(
       `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
-    ).then((res) => console.warn(res.data))
-      .catch((e) => console.warn(e.message));
+    );
   };
 
   const {
@@ -86,7 +85,7 @@ const ProfileScreen = ({ navigation, isFocused }) => {
   return (
 
     <View style={styles.container}>
-      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 1 }}>
+      <View style={{ backgroundColor: '#ffc857', width: '100%', flex: 4 }}>
         <StatusBar
           barStyle="dark-content"
         />
@@ -112,10 +111,10 @@ const ProfileScreen = ({ navigation, isFocused }) => {
         <Icon
           name="trophy"
           style={{
-            marginTop: 14, marginRight: 5, color: '#ffc857', fontSize: 18,
+            marginTop: 10, marginRight: 5, color: '#ffc857', fontSize: 18,
           }}
         />
-        <Text style={{ color: 'white', fontSize: 18, marginTop: 10 }}>Novice</Text>
+        <Text style={{ color: 'white', fontSize: 18, marginTop: 5 }}>Novice</Text>
         <Text style={{
           position: 'absolute', right: 10, color: 'white', fontWeight: 'bold',
         }}
@@ -137,7 +136,9 @@ const ProfileScreen = ({ navigation, isFocused }) => {
               onChangeText={(text) => onChange(text)}
               value={value}
               defaultValue={userInfo && userInfo.country}
-              style={{ backgroundColor: 'white', margin: 5, borderRadius: 5 }}
+              style={{
+                backgroundColor: 'white', margin: 5, borderRadius: 5, textAlign: 'center', fontSize: 20, color: '#0f9535',
+              }}
             />
           )}
         />
@@ -148,10 +149,10 @@ const ProfileScreen = ({ navigation, isFocused }) => {
             <TextInput
               onChangeText={(text) => onChange(text)}
               value={value}
-              defaultValue=""
+              defaultValue={userInfo && userInfo.aboutme}
               placeholder="about me"
               multiline
-              numberOfLines={10}
+              numberOfLines={5}
               style={{
                 margin: 5, backgroundColor: 'white', borderRadius: 5, textAlign: 'center', fontSize: 20, color: '#0f9535',
               }}
@@ -176,7 +177,6 @@ const ProfileScreen = ({ navigation, isFocused }) => {
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      {/* <Button onPress={handleSubmit(onSubmit)} title="submit" /> */}
       <Text style={styles.subHeader} subHeader>Friend Requests</Text>
       <ScrollView>
         <FriendRequests userInfo={userInfo} />
