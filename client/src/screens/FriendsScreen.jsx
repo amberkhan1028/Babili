@@ -109,6 +109,8 @@ const FriendsScreen = ({ navigation, isFocused }) => {
           <FriendSideBar
             friendLists={userInfo && userInfo.friends}
             onFriendPress={onFriendPressHandler}
+            sender={userInfo}
+            currentFriend={currentFriend}
           />
         </View>
         <View style={{ flexDirection: 'column', flex: 1 }}>
@@ -120,7 +122,13 @@ const FriendsScreen = ({ navigation, isFocused }) => {
           />
           {
             currentFriend
-          && <FriendChat me={userInfo} currentFriend={currentFriend} />
+          && (
+          <FriendChat
+            sender={userInfo}
+            currentFriend={currentFriend}
+            onFriendPress={onFriendPressHandler}
+          />
+          )
 }
         </View>
       </View>
