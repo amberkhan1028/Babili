@@ -28,8 +28,10 @@ const FriendChat = ({ currentFriend, sender }) => {
     const pusher = new Pusher(pusherConfig.key, pusherConfig);
     const chatChannel = pusher.subscribe('chat_channel');
     chatChannel.bind('pusher:subscription_succeeded', () => {
+      console.warn('subscription to channel ok!');
     });
     chatChannel.bind('pusher:subscription_error', () => {
+      console.warn('subscription to channel error!');
     });
     chatChannel.bind('join', ({ name }) => console.warn(`${name} joined the chat`));
     chatChannel.bind('message', ({ message, receiver }) => {

@@ -3,16 +3,163 @@
 /* eslint-disable no-shadow */
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import { Platform } from 'react-native';
 import { Dialogflow_V2 } from 'react-native-dialogflow-text';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import * as FileSystem from 'expo-file-system';
 import Constants from 'expo-constants';
+import { Audio } from 'expo-av';
 import firebase from 'firebase';
+import {
+  Platform, ActivityIndicator, StyleSheet, TouchableOpacity, Text, View,
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import config from '../../../config';
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: 'white',
+    marginBottom: 5,
+    width: '90%',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+});
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
+  const [recording, setRecording] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [, setQuery] = useState('');
+
+  const recordingOptions = {
+  // android not currently in use, but parameters are required
+    android: {
+      extension: '.m4a',
+      outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+      audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
+      sampleRate: 44100,
+      numberOfChannels: 2,
+      bitRate: 128000,
+    },
+    ios: {
+      extension: '.wav',
+      audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 128000,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+  };
+
+  const deleteRecordingFile = async () => {
+    try {
+      const info = await FileSystem.getInfoAsync(recording.getURI());
+      await FileSystem.deleteAsync(info.uri);
+    } catch (error) {
+      console.warn('There was an error deleting recording file', error);
+    }
+  };
+
+  const getTranscription = async () => {
+    setIsFetching(true);
+    try {
+      const info = await FileSystem.getInfoAsync(recording.getURI());
+      console.warn(`FILE INFO: ${JSON.stringify(info)}`);
+      const { uri } = info;
+      const formData = new FormData();
+      formData.append('file', {
+        uri,
+        type: 'audio/x-wav',
+        name: 'speech2text',
+      });
+      const response = await fetch(`https://speech.googleapis.com/v1p1beta1/speech:recognize?key=${config.OCR}`, {
+        method: 'POST',
+        body: {
+          audio: {
+            content: info,
+          },
+          config: {
+            enableAutomaticPunctuation: true,
+            encoding: 'LINEAR16',
+            languageCode: 'en-US',
+            model: 'default',
+
+          },
+
+        },
+      });
+      const data = await response.json();
+      console.warn(data);
+      setQuery(data.transcript);
+    } catch (error) {
+      console.warn('There was an error reading file', error);
+      stopRecording();
+      resetRecording();
+    }
+    setIsFetching(false);
+  };
+
+  const startRecording = async () => {
+    const { status } = await Permissions.getAsync(Permissions.AUDIO_RECORDING);
+    if (status !== 'granted') return;
+
+    setIsRecording(true);
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: true,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      playThroughEarpieceAndroid: true,
+    });
+    const recording = new Audio.Recording();
+
+    try {
+      await recording.prepareToRecordAsync(recordingOptions);
+      await recording.startAsync();
+    } catch (error) {
+      console.warn(error);
+      stopRecording();
+    }
+
+    setRecording(recording);
+  };
+
+  const stopRecording = async () => {
+    setIsRecording(false);
+    try {
+      await recording.stopAndUnloadAsync();
+    } catch (error) {
+    // Do nothing -- we are already unloaded.
+    }
+  };
+
+  const resetRecording = () => {
+    deleteRecordingFile();
+    setRecording(null);
+  };
+
+  const handleOnPressIn = () => {
+    startRecording();
+  };
+
+  const handleOnPressOut = () => {
+    stopRecording();
+    getTranscription();
+  };
 
   const BOT_USER = {
     _id: 2,
@@ -39,6 +186,10 @@ export default function MessagesScreen() {
         user: BOT_USER,
       },
     ]);
+  }, []);
+
+  useEffect(() => {
+    Permissions.askAsync(Permissions.AUDIO_RECORDING);
   }, []);
 
   const registerForPushNotificationsAsync = async () => {
@@ -134,13 +285,37 @@ export default function MessagesScreen() {
   );
 
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={(messages) => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
-      renderBubble={renderBubble}
-    />
+    <View style={{ flex: 5 }}>
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => onSend(messages)}
+        user={{
+          _id: 1,
+        }}
+        renderBubble={renderBubble}
+      />
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPressIn={handleOnPressIn}
+          onPressOut={handleOnPressOut}
+          activeOpacity={1}
+        >
+          {isRecording ? (
+            <FontAwesome name="microphone" size={25} color="#F42B03" />
+          )
+            : (
+              <>
+                <FontAwesome name="microphone" size={25} color="#Ffc857" />
+
+              </>
+            )}
+          {isFetching && <ActivityIndicator color="#0f9535" size="large" />}
+          { !isFetching
+            && <Text style={{ paddingLeft: 10, fontSize: 20 }}>Hold for talk to text</Text> }
+        </TouchableOpacity>
+      </View>
+
+    </View>
   );
 }
