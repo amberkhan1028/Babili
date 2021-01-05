@@ -15,7 +15,7 @@ const db = new Client({
 });
 // establish DB connections
 db.connect()
-  .then(() => console.warn('db connected !! :^)'))
+  .then(() => console.warn('db connected'))
   .catch((e) => console.warn(`unable to connect to db: ${e.message}`));
 
 router.put('/users/:email', (req, res) => {
@@ -66,7 +66,7 @@ router.post('/users/messages', (req, res) => {
 router.get('/users/messages', async (req, res) => {
   const { sender, receiver } = req.query;
   try {
-    const findAll = 'SELECT message_id AS _id, message AS text, sender AS user  FROM messages WHERE sender ->> \'_id\' = $1 AND receiver ->> \'_id\' = $2 OR sender ->> \'_id\' = $2 AND receiver ->> \'_id\' = $1 ORDER BY created_at DESC';
+    const findAll = 'SELECT message_id AS _id, message AS text, sender AS user FROM messages WHERE sender ->> \'_id\' = $1 AND receiver ->> \'_id\' = $2 OR sender ->> \'_id\' = $2 AND receiver ->> \'_id\' = $1 ORDER BY created_at DESC';
     const { rows } = await db.query(findAll, [sender, receiver]);
     if (rows) res.status(200).send(rows);
   } catch (err) {

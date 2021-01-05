@@ -64,10 +64,11 @@ const ProfileScreen = ({ navigation, isFocused }) => {
       .catch((e) => console.warn(e.message));
   };
 
-  const updateUser = async (data) => {
-    await axios.patch(
+  const updateUser = (data) => {
+    axios.patch(
       `${config.BASE_URL}/user/${navigation.getParam('email')}`, data,
-    );
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
   const {
