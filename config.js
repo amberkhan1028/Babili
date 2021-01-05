@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unresolved */
 import {
-  PUSHER_APP_ID,
   GOOGLE_AND,
   GOOGLE_IOS,
   OCR,
@@ -21,7 +20,6 @@ const firebaseConfig = {
   measurementId: 'G-8KFB07WSNL',
 };
 export default {
-  PUSHER_APP_ID,
   BASE_URL,
   GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
