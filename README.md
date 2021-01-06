@@ -10,7 +10,7 @@ Babili also contains an object detection feature. This tool utilizes machine lea
 
 ## Dependencies
 
-`"dependencies": {
+"dependencies": {
     "@expo/vector-icons": "^12.0.2",
     "@google-cloud/dialogflow": "^3.3.0",
     "@material-ui/core": "^4.11.2",
@@ -101,7 +101,7 @@ Babili also contains an object detection feature. This tool utilizes machine lea
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.2"
-  },`
+  },
 
   ## Installation and Startup
 

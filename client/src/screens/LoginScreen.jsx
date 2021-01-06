@@ -9,7 +9,10 @@ import {
 import * as Google from 'expo-google-app-auth';
 import axios from 'axios';
 import firebase from 'firebase';
+import * as Facebook from 'expo-facebook';
 import config from '../../../config';
+
+Facebook.initializeAsync({ appId: config.FB_ID, appName: 'Babili' });
 
 const styles = StyleSheet.create({
   container: {
@@ -30,56 +33,39 @@ const styles = StyleSheet.create({
   },
 });
 export default function LoginScreen({ navigation: { navigate } }) {
-  const isSameUser = (googleUser, firebaseUser) => {
-    if (firebaseUser) {
-      const { providerData } = firebaseUser;
-      for (let i = 0; i < providerData.length; i + 1) {
-        if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID
-          && providerData[i].uid === googleUser.getBasicProfile().getId()
-        ) {
-          // We don't need to re-auth the Firebase connection.
-          return true;
-        }
-      }
+  const onSignIn = async (user, type) => {
+    // if (type === 'google') {
+    if (user.additionalUserInfo.isNewUser === true) { // user is new
+      await firebase.database().ref(`/users/${user.user.uid}`)
+        .set({
+          gmail: user.user.email,
+          profile_picture: user.additionalUserInfo.profile.picture,
+          first_name: user.additionalUserInfo.profile.given_name,
+          last_name: user.additionalUserInfo.profile.family_name,
+          created_at: Date.now(),
+        });
+      await axios.post('http://192.168.1.138:3000/login', {
+        email: user.user.email,
+        name: `${user.additionalUserInfo.profile.given_name} ${user.additionalUserInfo.profile.family_name}`,
+        photoUrl: user.additionalUserInfo.profile.picture,
+        loginType: type,
+      });
+      navigate('Home', { email: user.user.email });
+    } else { // user is not new
+      firebase.database().ref(`/users/${user.user.uid}`).update({
+        last_logged_in: Date.now(),
+      });
+      navigate('Home', { email: user.user.email });
+      // }
+    // } else if (type === 'facebook') {
+    //   console.warn('USER', user);
+    //   await axios.post('http://192.168.1.138:3000/login', {
+    //     email: user.email || null,
+    //     name: user.name || null,
+    //     photoUrl: null,
+    //     loginType: type,
+    //   });
     }
-    return false;
-  };
-
-  const onSignIn = async (googleUser) => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(async (firebaseUser) => {
-      unsubscribe();
-      // if current user and current firebase user are not the same
-      if (!isSameUser(googleUser, firebaseUser)) {
-        // create a new google credit...
-        const credential = firebase.auth.GoogleAuthProvider.credential(
-          googleUser.idToken,
-          googleUser.accessToken,
-        );
-          // ...and sign in with that credit
-        const result = await firebase.auth().signInWithCredential(credential);
-        // if user is new add info to fb and postgreSql
-        if (result.additionalUserInfo.isNewUser) {
-          await firebase.database().ref(`/users/${result.user.uid}`)
-            .set({
-              gmail: result.user.email,
-              profile_picture: result.additionalUserInfo.profile.picture,
-              first_name: result.additionalUserInfo.profile.given_name,
-              last_name: result.additionalUserInfo.profile.family_name,
-              created_at: Date.now(),
-            });
-          await axios.post(`${config.BASE_URL}/login`, {
-            email: result.user.email,
-            name: `${result.additionalUserInfo.profile.given_name} ${result.additionalUserInfo.profile.family_name}`,
-            photoUrl: result.additionalUserInfo.profile.picture,
-          });
-          navigate('Home', { email: result.user.email });
-        } else { // user is not new, just update login in firebase
-          firebase.database().ref(`/users/${result.user.uid}`).update({
-            last_logged_in: Date.now(),
-          });
-        }
-      }
-    });
   };
 
   const signInWithGoogleAsync = async () => {
@@ -92,16 +78,33 @@ export default function LoginScreen({ navigation: { navigate } }) {
         androidStandaloneAppClientId: config.GOOGLE_AND,
       });
       if (result.type === 'success') {
-        await onSignIn(result);
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          result.idToken,
+          result.accessToken,
+        );
+        const user = await firebase.auth().signInWithCredential(credential);
+        await onSignIn(user, 'google');
       }
     } catch (err) {
       console.warn('err in signInWithGoogleAsync', err);
     }
   };
 
-  const signInWithGoogle = () => {
-    signInWithGoogleAsync();
-  };
+  // const signInWithFaceBookAsync = async () => {
+  //   try {
+  //     const { token, type, userId } = await Facebook.logInWithReadPermissionsAsync({ permissions: ['public_profile'] });
+  //     if (type === 'success') {
+  //       const user = await fetch(`https://graph.facebook.com/${userId}?access_token=${token}`);
+  //       await onSignIn(await user.json(), 'facebook');
+  //     }
+  //   } catch (err) {
+  //     console.warn('err in fb login', err);
+  //   }
+  // };
+
+  // const signInWithFaceBook = () => signInWithFaceBookAsync();
+
+  const signInWithGoogle = () => signInWithGoogleAsync();
 
   return (
     <View style={styles.container}>
@@ -116,6 +119,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
           source={require('../../assets/logo.png')}
         />
         <Button onPress={() => signInWithGoogle()} title="Sign in with Google" />
+        <Button onPress={() => signInWithFaceBook()} title="Sign in with Facebook" />
       </View>
     </View>
   );
