@@ -97,8 +97,8 @@ export default function Card({ card }) {
           light
           style={styles.starTitle}
           onPress={async () => {
-            await axios.post(`${config.BASE_URL}/wordbank`, { nativeterm: card.shortdef, engterm: card.hwi.hw.toUpperCase() });
             Alert.alert(`Saved ${card.hwi.hw.toUpperCase()} to your word bank!`);
+            await axios.post(`${config.BASE_URL}/wordbank`, { nativeterm: card.shortdef, engterm: card.hwi.hw.toUpperCase() });
           }}
         />
         <Text style={styles.termText}>
