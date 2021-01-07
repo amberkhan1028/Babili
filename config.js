@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 import {
-  GOOGLE_AND,
   GOOGLE_IOS,
+  GOOGLE_AND,
   OCR,
   DIALOG_FLOW_PROJECT_ID,
   DIALOG_FLOW_PRIVATE_KEY,
