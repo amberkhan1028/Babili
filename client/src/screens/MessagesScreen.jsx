@@ -1,8 +1,11 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable camelcase */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-shadow */
-import React, { useState, useCallback, useEffect } from 'react';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import React, {
+  useState, useCallback, useEffect,
+} from 'react';
+import { GiftedChat, Bubble, Actions } from 'react-native-gifted-chat';
 import { Dialogflow_V2 } from 'react-native-dialogflow-text';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
@@ -11,7 +14,7 @@ import Constants from 'expo-constants';
 import { Audio } from 'expo-av';
 import firebase from 'firebase';
 import {
-  Platform, ActivityIndicator, StyleSheet, TouchableOpacity, Text, View,
+  Platform, ActivityIndicator, StyleSheet, TouchableOpacity, View, Image, Text,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
@@ -42,6 +45,7 @@ export default function MessagesScreen() {
   const [isFetching, setIsFetching] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [text, setText] = useState('');
+  const [fonts, setFonts] = useState(15);
 
   const recordingOptions = {
     android: {
@@ -141,7 +145,11 @@ export default function MessagesScreen() {
       config.DIALOG_FLOW_PROJECT_ID,
     );
     registerForPushNotificationsAsync();
-  }, []);
+  }, [fonts]);
+
+  const changeFontSize = () => {
+    (fonts === 15 ? setFonts(28) : setFonts(15));
+  };
 
   useEffect(() => {
     setMessages([
@@ -239,13 +247,44 @@ export default function MessagesScreen() {
 
   const renderBubble = (props) => (
     <Bubble
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
       wrapperStyle={{
         right: {
           backgroundColor: '#0f9535',
         },
       }}
+      textStyle={{
+        right: {
+          fontSize: fonts,
+        },
+        left: {
+          fontSize: fonts,
+        },
+      }}
+    />
+  );
+
+  const renderActions = (props) => (
+    <Actions
+      {...props}
+      containerStyle={{
+        width: 44,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 4,
+        marginRight: 4,
+        marginBottom: 0,
+      }}
+      icon={() => (
+        <Image
+          style={{ width: 32, height: 32 }}
+          source={{
+            uri: 'https://icon-library.com/images/font-size-icon/font-size-icon-18.jpg',
+          }}
+        />
+      )}
+      onPressActionButton={() => { changeFontSize(); }}
     />
   );
 
@@ -260,6 +299,7 @@ export default function MessagesScreen() {
           _id: 1,
         }}
         renderBubble={renderBubble}
+        renderActions={renderActions}
       />
       <View style={styles.container}>
         <TouchableOpacity
