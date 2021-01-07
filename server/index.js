@@ -8,6 +8,7 @@ const { Client } = require('pg');
 const { sequelize } = require('./db/index');
 const wordbank = require('./db/Routes/wordBank');
 const messages = require('./db/Routes/messages');
+const speech = require('./db/Routes/speech');
 
 const user = require('./db/Routes/user');
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/', wordbank);
 app.use('/', messages);
 app.use('/', user);
+app.use('/', speech);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

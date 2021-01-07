@@ -14,6 +14,7 @@ import {
   Platform, ActivityIndicator, StyleSheet, TouchableOpacity, Text, View,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import axios from 'axios';
 import config from '../../../config';
 
 const styles = StyleSheet.create({
@@ -37,19 +38,18 @@ const styles = StyleSheet.create({
 
 export default function MessagesScreen() {
   const [messages, setMessages] = useState([]);
-  const [recording, setRecording] = useState(null);
+  const [recording, setRecording] = useState({});
   const [isFetching, setIsFetching] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [, setQuery] = useState('');
+  const [text, setText] = useState('');
 
   const recordingOptions = {
-  // android not currently in use, but parameters are required
     android: {
       extension: '.m4a',
       outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
       audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
       sampleRate: 44100,
-      numberOfChannels: 2,
+      numberOfChannels: 1,
       bitRate: 128000,
     },
     ios: {
@@ -64,50 +64,22 @@ export default function MessagesScreen() {
     },
   };
 
-  const deleteRecordingFile = async () => {
-    try {
-      const info = await FileSystem.getInfoAsync(recording.getURI());
-      await FileSystem.deleteAsync(info.uri);
-    } catch (error) {
-      console.warn('There was an error deleting recording file', error);
-    }
-  };
-
-  const getTranscription = async () => {
+  const getAudioTranscription = async () => {
     setIsFetching(true);
+
     try {
-      const info = await FileSystem.getInfoAsync(recording.getURI());
-      console.warn(`FILE INFO: ${JSON.stringify(info)}`);
-      const { uri } = info;
+      const { uri } = await FileSystem.getInfoAsync(recording.getURI());
       const formData = new FormData();
       formData.append('file', {
         uri,
-        type: 'audio/x-wav',
-        name: 'speech2text',
+        type: Platform.OS === 'ios' ? 'audio/x-wav' : 'audio/m4a',
+        name: Platform.OS === 'ios' ? `${Date.now()}.wav` : `${Date.now()}.m4a`,
       });
-      const response = await fetch(`https://speech.googleapis.com/v1p1beta1/speech:recognize?key=${config.OCR}`, {
-        method: 'POST',
-        body: {
-          audio: {
-            content: info,
-          },
-          config: {
-            enableAutomaticPunctuation: true,
-            encoding: 'LINEAR16',
-            languageCode: 'en-US',
-            model: 'default',
 
-          },
-
-        },
-      });
-      const data = await response.json();
-      console.warn(data);
-      setQuery(data.transcript);
-    } catch (error) {
-      console.warn('There was an error reading file', error);
-      stopRecording();
-      resetRecording();
+      const { data } = await axios.post(`${config.BASE_URL}/speech`, formData, { headers: { 'content-type': 'multipart/form-data' } });
+      setText(data.text);
+    } catch (e) {
+      console.warn(e);
     }
     setIsFetching(false);
   };
@@ -121,44 +93,38 @@ export default function MessagesScreen() {
       allowsRecordingIOS: true,
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
       playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
       interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
       playThroughEarpieceAndroid: true,
     });
-    const recording = new Audio.Recording();
+    const newRecording = new Audio.Recording();
 
     try {
-      await recording.prepareToRecordAsync(recordingOptions);
-      await recording.startAsync();
+      await newRecording.prepareToRecordAsync(recordingOptions);
+      await newRecording.startAsync();
+      setRecording(newRecording);
     } catch (error) {
       console.warn(error);
       stopRecording();
     }
-
-    setRecording(recording);
   };
 
   const stopRecording = async () => {
     setIsRecording(false);
     try {
       await recording.stopAndUnloadAsync();
+      setRecording(recording);
     } catch (error) {
-    // Do nothing -- we are already unloaded.
+      console.warn(error);
     }
-  };
-
-  const resetRecording = () => {
-    deleteRecordingFile();
-    setRecording(null);
   };
 
   const handleOnPressIn = () => {
     startRecording();
   };
 
-  const handleOnPressOut = () => {
-    stopRecording();
-    getTranscription();
+  const handleOnPressOut = async () => {
+    await stopRecording();
+    await getAudioTranscription();
   };
 
   const BOT_USER = {
@@ -175,18 +141,18 @@ export default function MessagesScreen() {
       config.DIALOG_FLOW_PROJECT_ID,
     );
     registerForPushNotificationsAsync();
-  });
+  }, []);
 
   useEffect(() => {
     setMessages([
       {
         _id: Math.round(Math.random() * 1000000),
-        text: "Hi I'm Devi! I'm here to help you learn how to converse in English. What would you like to talk about today?",
+        text: "Hi I'm Devi! I'm here to help you learn English. What would you like to talk about today?",
         createdAt: new Date(),
         user: BOT_USER,
       },
     ]);
-  }, []);
+  }, [setMessages]);
 
   useEffect(() => {
     Permissions.askAsync(Permissions.AUDIO_RECORDING);
@@ -214,7 +180,7 @@ export default function MessagesScreen() {
           .ref(`users/${currentUser.uid}/push_token`)
           .set(token);
       } else { // they've already given permission previously
-        console.warn('User has already given permission');
+        // console.warn('User has already given permission');
       }
       if (Platform.OS === 'android') {
         Notifications.setNotificationChannelAsync('default', {
@@ -241,7 +207,6 @@ export default function MessagesScreen() {
         vibrationPattern: [0, 250, 250, 250],
         lightColor: '#FF231F7C',
       });
-
     }
   };
 
@@ -260,7 +225,6 @@ export default function MessagesScreen() {
     const text = result.queryResult.fulfillmentMessages[0].text.text[0];
     sendBotResponse(text);
   };
-
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
 
@@ -270,6 +234,7 @@ export default function MessagesScreen() {
       (result) => handleGoogleResponse(result),
       (error) => console.warn(error),
     );
+    setTimeout(() => setText(undefined), 1000);
   }, []);
 
   const renderBubble = (props) => (
@@ -289,6 +254,8 @@ export default function MessagesScreen() {
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
+        showUserAvatar
+        text={text || undefined}
         user={{
           _id: 1,
         }}

@@ -61,7 +61,7 @@ const QuizScreen = ({ navigation: { navigate } }) => {
         })
       }
     }
-  })
+  }, [])
 
   useEffect(() => {
     if (userSelectedAnswers.length) {
