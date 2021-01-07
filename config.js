@@ -8,8 +8,8 @@ import {
   FB_SECRET,
   BASE_URL,
   DIALOG_FLOW_PRIVATE_KEY,
-  GOOGLE_APPLICATION_CREDENTIALS,
   DIALOG_FLOW_CLIENT_EMAIL,
+  GOOGLE_APPLICATION_CREDENTIALS,
 
 } from '@env';
 
@@ -33,6 +33,6 @@ export default {
   GOOGLE_AND,
   FB_SECRET,
   FB_ID,
-  firebaseConfig,
   BASE_URL,
+  firebaseConfig,
 };
