@@ -52,10 +52,11 @@ const FriendsScreen = ({ navigation, isFocused }) => {
     ).then((res) => setUserInfo(res.data))
       .catch((e) => console.warn(e.message));
   };
-  const updateFriend = async (email, data) => {
-    await axios.patch(
+  const updateFriend = (email, data) => {
+    axios.patch(
       `${config.BASE_URL}/user/${email}`, data,
-    );
+    ).then((res) => console.warn(res.data))
+      .catch((e) => console.warn(e.message));
   };
 
   const checkFriend = (email, arr) => {
@@ -78,8 +79,7 @@ const FriendsScreen = ({ navigation, isFocused }) => {
 
       const alreadyFriend = checkFriend(userInfo.email, userGettingRequest.friends);
       if (alreadyFriend) {
-        setSearchResults(null);
-        return Alert.alert('Error!', 'user is already your friend');
+        setSearchResults(null); return Alert.alert('Error!', 'user is already your friend');
       }
 
       const userSendingRequest = {
@@ -103,7 +103,9 @@ const FriendsScreen = ({ navigation, isFocused }) => {
       <StatusBar
         barStyle="dark-content"
       />
-      <View />
+      <View>
+        {/* <TopFriends /> */}
+      </View>
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <View style={styles.chatWrapper}>
           <FriendSideBar

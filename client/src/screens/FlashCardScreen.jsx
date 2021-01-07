@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import {
   ScrollView, View,
@@ -9,7 +10,7 @@ import Cards from '../components/Card';
 const randomWords = require('random-words');
 
 const FlashCardScreen = () => {
-  const [words] = useState(randomWords(10));
+  const [words] = useState(randomWords(11));
   const [flashCards, setFlashCards] = useState([]);
 
   useEffect(() => {
@@ -26,9 +27,10 @@ const FlashCardScreen = () => {
 
       <ScrollView>
         {
-        flashCards.sort(() => 0.5 - Math.random()).map((card) => (
+        flashCards.slice(1, flashCards.length - 1).map((card, i) => (
           <Cards
             card={card}
+            key={i * Math.random()}
           />
         ))
         }

@@ -50,7 +50,9 @@ function FriendSearchBar({ searchFriend, searchResults, sendFriendRequest }) {
         style={styles.searchBar}
         placeholder=" search for people"
         onChangeText={(text) => searchFriend(text)}
-      />
+      >
+        {/* <AntDesign name="search1" size={20} color="#147EFB" /> */}
+      </TextInput>
       {
         searchResults
       && (

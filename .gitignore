@@ -13,6 +13,7 @@ web-build/
 .eslintcache
 .npm
 pusher.json
+speechConfig.json
 
 # macOS
 .DS_Store
