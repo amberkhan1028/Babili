@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
@@ -25,8 +26,8 @@ function FriendSideBar({ friendLists, onFriendPress }) {
   return (
     <View style={styles.container}>
       {(friendLists && friendLists.length > 0)
-    && friendLists.map((friend) => (
-      <TouchableOpacity onPress={() => onFriendPress(friend)}>
+    && friendLists.map((friend, i) => (
+      <TouchableOpacity key={i} onPress={() => onFriendPress(friend)}>
         <Image
           source={{
             uri: friend.image,
