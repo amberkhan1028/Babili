@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable react/prop-types */
@@ -75,8 +76,18 @@ const ProfileScreen = ({ navigation, isFocused }) => {
     handleSubmit, control,
   } = useForm();
 
-  const onSubmit = (data) => {
-    updateUser(data);
+  const onSubmit = async (data) => {
+    await updateUser(data);
+    alert('Profile Updated!');
+  };
+
+  const logOut = async () => {
+    try {
+      await firebase.auth().signOut();
+      navigation.navigate('Login');
+    } catch (err) {
+      console.warn('err in logout', err);
+    }
   };
 
   useEffect(() => {
@@ -182,6 +193,23 @@ const ProfileScreen = ({ navigation, isFocused }) => {
       <ScrollView>
         <FriendRequests userInfo={userInfo} />
       </ScrollView>
+      <TouchableOpacity onPress={logOut}>
+        <Text style={{
+          backgroundColor: 'white',
+          width: 85,
+          height: 30,
+          color: '#2E86ab',
+          fontWeight: 'bold',
+          fontSize: 20,
+          textAlign: 'center',
+          marginBottom: 5,
+          borderRadius: 5,
+          alignSelf: 'flex-end',
+        }}
+        >
+          Logout
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
