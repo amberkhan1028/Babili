@@ -7,11 +7,13 @@ import {
   Alert,
   Button,
   ActivityIndicator,
+  TouchableOpacity,
+  StatusBar,
 
 } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker';
 import config from '../../../config';
+import CameraPreview from '../components/CameraPreview';
 
 const API_KEY = config.OCR;
 const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
@@ -19,26 +21,23 @@ const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   translationView: {
-    marginTop: 30,
-    padding: 20,
-    borderColor: '#cccccc',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    backgroundColor: '#ffffff',
+    padding: 10,
     marginHorizontal: 20,
-    height: 500,
-  },
-  body: {
-    padding: 5,
-    paddingTop: 25,
+    height: '90%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 20,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
   },
   header: {
     backgroundColor: '#0f9535',
+    marginBottom: 10,
+    borderRadius: 10,
   },
   title: {
     margin: 10,
@@ -54,6 +53,12 @@ export default function DocumentScreen() {
   const [language] = useState('es');
   const [word, setWord] = useState(null);
   const [statusAvail, setStatusAvail] = useState(false);
+  const [, setStartCamera] = useState(false);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(false);
+  const [cameraType] = useState(Camera.Constants.Type.back);
+
+  let camera = Camera;
   const GoogleTranslateAPI = 'https://translation.googleapis.com/language/translate/v2';
   const GoogleAPIKey = config.OCR;
 
@@ -150,36 +155,45 @@ export default function DocumentScreen() {
     return value[0].text;
   }
 
-  const takePictureAsync = async () => {
+  const startCamera = async () => {
     const { status } = await Camera.requestPermissionsAsync();
     if (status === 'granted') {
-      const { cancelled, base64 } = await ImagePicker.launchCameraAsync({
-        base64: true,
-      });
-      if (!cancelled) {
-        setWord('Loading...');
-        try {
-          const result = await callGoogleVisionAsync(base64);
-          setStatusAvail(true);
-          setWord(result);
-        } catch (error) {
-          setWord(`Error: ${error.message}`);
-        }
-      } else {
-        setWord(null);
-      }
+      setStartCamera(true);
     } else {
       Alert.alert('Access denied');
     }
   };
 
-  useEffect(() => {
-    takePictureAsync();
-  }, []);
+  const takePictureAsync = async () => {
+    const photo = await camera.takePictureAsync({ base64: true });
+    setPreviewVisible(true);
+    setCapturedImage(photo);
+  };
+
+  const analyzePhoto = async () => {
+    try {
+      const result = await callGoogleVisionAsync(capturedImage.base64);
+      setStatusAvail(true);
+      setWord(result);
+    } catch (error) {
+      setWord(`Error: ${error.message}`);
+    }
+  };
 
   const loadNewTranslation = () => {
     setTranslation('');
   };
+  const retakePhoto = async () => {
+    setCapturedImage(null);
+    setPreviewVisible(false);
+    setStatusAvail(true);
+    loadNewTranslation();
+    startCamera();
+  };
+
+  useEffect(() => {
+    startCamera();
+  }, []);
 
   const showResult = () => (
     <View style={styles.translationView}>
@@ -188,9 +202,15 @@ export default function DocumentScreen() {
           <View style={styles.header}>
             <Text style={styles.title}>Babili Text Detection</Text>
           </View>
-          <Text fontSize="50" marginBottom="40" color="#2E86ab">{word}</Text>
-          <Text style={styles.translationTextField}>{translation}</Text>
-          <Button color="#ffc857" title="Take Another Picture" onPress={() => { setStatusAvail(false); takePictureAsync(); loadNewTranslation(); }} />
+          <Text style={{ fontSize: 40, marginBottom: 20, color: '#2E86ab' }}>{word}</Text>
+          <Text style={{
+            fontSize: 20, marginBottom: 50, color: '#f42B03', justifyContent: 'flex-end',
+          }}
+          >
+            { translation }
+          </Text>
+          <Button color="#ffc857" title="Detect More Text!" onPress={() => retakePhoto()} />
+
         </View>
       ) : (
         <ActivityIndicator size="large" />
@@ -200,11 +220,76 @@ export default function DocumentScreen() {
 
   return (
     <View style={styles.container}>
-      <>
-        <View style={styles.body}>
-          {word && showResult()}
+      {!translation ? (
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+          }}
+        >
+          {previewVisible && capturedImage ? (
+            <CameraPreview
+              photo={capturedImage}
+              savePhoto={analyzePhoto}
+              retakePicture={retakePhoto}
+            />
+          ) : (
+            <Camera
+              type={cameraType}
+              style={{ flex: 1 }}
+              ref={(r) => {
+                camera = r;
+              }}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                  flexDirection: 'row',
+                }}
+              >
+                <View
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    flexDirection: 'row',
+                    flex: 1,
+                    width: '100%',
+                    padding: 20,
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      flex: 1,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={takePictureAsync}
+                      style={{
+                        width: 70,
+                        height: 70,
+                        bottom: 0,
+                        borderRadius: 50,
+                        backgroundColor: '#fff',
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            </Camera>
+          )}
         </View>
-      </>
+      ) : (
+        <View style={styles.body}>{word && showResult()}</View>
+
+      )}
+
+      <StatusBar style="auto" />
     </View>
+
   );
 }
