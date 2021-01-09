@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   searchListContainer: {
-    height: 200,
-    elevation: 1,
+    // height: 200,
+    // elevation: 1,
     // backgroundColor: '#147EFB',
     // borderRadius: 5,
     borderColor: 'white',

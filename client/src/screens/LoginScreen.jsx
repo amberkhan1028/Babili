@@ -44,7 +44,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
           last_name: user.additionalUserInfo.profile.family_name,
           created_at: Date.now(),
         });
-      await axios.post('http://192.168.1.138:3000/login', {
+      await axios.post(`${config.BASE_URL}/login`, {
         email: user.user.email,
         name: `${user.additionalUserInfo.profile.given_name} ${user.additionalUserInfo.profile.family_name}`,
         photoUrl: user.additionalUserInfo.profile.picture,
@@ -59,7 +59,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
       // }
     // } else if (type === 'facebook') {
     //   console.warn('USER', user);
-    //   await axios.post('http://192.168.1.138:3000/login', {
+    //   await axios.post('${}', {
     //     email: user.email || null,
     //     name: user.name || null,
     //     photoUrl: null,
@@ -92,7 +92,8 @@ export default function LoginScreen({ navigation: { navigate } }) {
 
   // const signInWithFaceBookAsync = async () => {
   //   try {
-  //     const { token, type, userId } = await Facebook.logInWithReadPermissionsAsync({ permissions: ['public_profile'] });
+  //     const { token, type, userId } =
+  //  await Facebook.logInWithReadPermissionsAsync({ permissions: ['public_profile'] });
   //     if (type === 'success') {
   //       const user = await fetch(`https://graph.facebook.com/${userId}?access_token=${token}`);
   //       await onSignIn(await user.json(), 'facebook');
@@ -119,7 +120,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
           source={require('../../assets/logo.png')}
         />
         <Button onPress={() => signInWithGoogle()} title="Sign in with Google" />
-        <Button onPress={() => signInWithFaceBook()} title="Sign in with Facebook" />
+        {/* <Button onPress={() => signInWithFaceBook()} title="Sign in with Facebook" /> */}
       </View>
     </View>
   );
