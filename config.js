@@ -1,15 +1,15 @@
 /* eslint-disable import/no-unresolved */
 import {
   GOOGLE_IOS,
+  OCR,
   GOOGLE_AND,
   DIALOG_FLOW_PROJECT_ID,
   FB_ID,
-  OCR,
-  FB_SECRET,
-  BASE_URL,
-  DIALOG_FLOW_PRIVATE_KEY,
   DIALOG_FLOW_CLIENT_EMAIL,
+  DIALOG_FLOW_PRIVATE_KEY,
+  FB_SECRET,
   GOOGLE_APPLICATION_CREDENTIALS,
+  BASE_URL,
 
 } from '@env';
 
