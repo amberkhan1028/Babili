@@ -1,25 +1,40 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
+import { Header, Icon } from 'react-native-elements';
+import { View } from 'react-native';
+import Modal from 'react-native-modal';
+import LevelSlider from './MemoryGameSlider';
 
-const styles = StyleSheet.create({
-  header: {
-    flex: 1,
-    flexDirection: 'column',
-    alignSelf: 'stretch',
-    paddingTop: 20,
-    paddingBottom: 5,
-    backgroundColor: '#f3f3f3',
-  },
-  header_text: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    textAlign: 'center',
-  },
-});
-const Header = () => (
-  <View style={styles.header}>
-    <Text style={styles.header_text}>MemoryGame</Text>
-  </View>
-);
+export default function MemoryGameHeader(props) {
+  const [levelModalVisible, setLevelModalVisible] = useState(false);
 
-export default Header;
+  const Level = () => (
+    <Icon name="settings" color="#fff" onPress={() => setLevelModalVisible(true)} />
+  );
+
+  return (
+    <>
+      <Header
+        placement="center"
+        rightComponent={<Level />}
+        centerComponent={{ text: 'memory game', style: { color: '#fff' } }}
+      />
+
+      <Modal isVisible={levelModalVisible} onBackdropPress={() => setLevelModalVisible(false)}>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            justifyContent: 'center',
+            flex: 0.2,
+            padding: 15,
+            margin: 15,
+            alignItems: 'stretch',
+          }}
+        >
+          <LevelSlider setColumns={props.setColumns} setRows={props.setRows} rows={props.rows} />
+        </View>
+      </Modal>
+    </>
+  );
+}

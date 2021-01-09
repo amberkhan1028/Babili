@@ -1,45 +1,87 @@
-/* eslint-disable camelcase */
-import React from 'react';
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 import {
-  StyleSheet, View, TouchableHighlight, Image,
+  TouchableOpacity, TouchableHighlight, Image, Dimensions, View,
 } from 'react-native';
+import Modal from 'react-native-modal';
+import { Button } from 'react-native-elements';
+import * as constant from './constants';
 
-const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  card_text: {
-    fontSize: 50,
-    fontWeight: 'bold',
-  },
-});
+export default function MemoryGameCard({
+  card, countScore, gameOver, columns,
+}) {
+  const marginBetweenImages = 5;
+  const imageDimension = Dimensions.get('window').width / columns - marginBetweenImages * 2;
 
-const MemoryGameCard = ({
-  // eslint-disable-next-line react/prop-types
-  src, name, clickCard, is_open,
-}) => {
-  let cardSrc = 'https://scontent-dfw5-1.xx.fbcdn.net/v/t31.0-8/p960x960/30848584_493792521023939_8435646401627466011_o.png?_nc_cat=109&ccb=2&_nc_sid=85a577&_nc_ohc=xtJDLwjcB0cAX8mXhmS&_nc_oc=AQnt9csMPj2bfXFsIeP93AGAr5htp-FsZ3KuhIJ5p1o62411qGsClDioXN2Y_3qu5NuyuYv-MzLp9qxcbMzjiK4T&_nc_ht=scontent-dfw5-1.xx&_nc_tp=30&oh=31f26c47c253e1fa5237173182b55450&oe=60056885';
-  if (is_open) {
-    cardSrc = src;
+  const imageInModal = Dimensions.get('window').width / 1.5;
+  const [hideImage, setHideImage] = useState(true);
+  const [celebrate, setCelebrate] = useState(false);
+
+  function onSelect() {
+    setHideImage(false);
+    const timeout = setTimeout(() => setHideImage(true), 1000);
+    if (countScore(card)) {
+      setTimeout(() => setCelebrate(true), 400);
+      clearTimeout(timeout);
+    }
   }
-  return (
-    <View style={styles.card}>
-      <TouchableHighlight
-        onPress={clickCard}
-        activeOpacity={0.75}
-        underlayColor="#f1f1f1"
-      >
-        <Image
-          name={name}
-          source={{ uri: cardSrc }}
-          style={{
-            width: 200, height: 200, marginRight: 5, borderRadius: 10,
-          }}
-        />
-      </TouchableHighlight>
-    </View>
-  );
-};
 
-export default MemoryGameCard;
+  function backDrop() {
+    setCelebrate(false);
+    setHideImage(true);
+  }
+
+  return (
+    <>
+      <TouchableOpacity onPress={() => onSelect()}>
+        <Image
+          resizeMode="contain"
+          style={{
+            width: imageDimension,
+            height: imageDimension,
+            margin: marginBetweenImages,
+            borderWidth: 1,
+            borderColor: '#ffebee',
+            backgroundColor: '#ffebee',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.37,
+            shadowRadius: 2,
+            overflow: 'visible',
+          }}
+          source={hideImage ? {} : card.name}
+        />
+      </TouchableOpacity>
+
+      {!gameOver && (
+        <Modal
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp"
+          isVisible={celebrate}
+          onBackdropPress={() => backDrop()}
+        >
+          <View
+            style={{
+              flex: 0.7,
+              backgroundColor: '#fff',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <TouchableHighlight onPress={() => backDrop()}>
+              <Image
+                resizeMode="contain"
+                source={constant.RandomElementFromArray(constant.yayGIFs)}
+                style={{ width: imageInModal, height: imageInModal }}
+              />
+            </TouchableHighlight>
+            <Button title="Next" onPress={() => backDrop()} style={{ width: 65 }} />
+          </View>
+        </Modal>
+      )}
+    </>
+  );
+}

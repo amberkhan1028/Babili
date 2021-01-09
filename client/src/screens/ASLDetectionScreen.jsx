@@ -91,7 +91,7 @@ export default function ASLDetectionScreen() {
   const [emoji, setEmoji] = useState(null);
   const [predictionFound, setPredictionFound] = useState(false);
 
-  const emojis = { thumbs_up: '👍🏾 Approval!', victory: '✌🏾 Victory!' };
+  const emojis = { thumbs_up: '👍🏾 Approval!', victory: '👋🏾 Hello!' };
 
   const TensorCamera = cameraWithTensors(Camera);
   let requestAnimationFrameId = 0;
