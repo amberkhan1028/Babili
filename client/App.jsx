@@ -77,7 +77,7 @@ const navigator = createStackNavigator({
   ASL: ASLDetectionScreen,
   Home: AppStack,
 }, {
-  initialRouteName: 'ASL',
+  initialRouteName: 'Loading',
   defaultNavigationOptions: {
     title: 'babili',
   },
