@@ -27,8 +27,15 @@ function FriendSideBar({ friendLists, onFriendPress }) {
     <View style={styles.container}>
       {(friendLists && friendLists.length > 0)
     && friendLists.map((friend, i) => (
-      <TouchableOpacity key={i} onPress={() => onFriendPress(friend)}>
+      <TouchableOpacity
+        key={i}
+        onPress={() => {
+          console.log('friend', friend);
+          onFriendPress(friend);
+        }}
+      >
         <Image
+          key={i}
           source={{
             uri: friend.image,
           }}

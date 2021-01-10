@@ -41,6 +41,8 @@ const FriendChat = ({ currentFriend, sender }) => {
     chatChannel.bind('join', ({ name }) => console.warn(`${name} joined the chat`));
     chatChannel.bind('message', ({ message, receiver }) => {
       // update messages anytime there's a new message
+      console.log('message: ', message);
+      console.log('receiver: ', receiver);
       if (message.user._id === sender.email || receiver._id === sender.email) {
         setMessages((prevMessages) => GiftedChat.append(prevMessages, message));
       }
@@ -49,9 +51,17 @@ const FriendChat = ({ currentFriend, sender }) => {
     // get previous messages
     (async () => {
       const { data } = await axios.get(`${pusherConfig.serverEndpoint}/users/messages/?sender=${sender.email}&receiver=${currentFriend.email}`);
+      // console.log(data, 'DATA');
       setMessages(data);
     })();
   }, [currentFriend, messages, fonts]);
+
+  const onSend = useCallback((messages = []) => {
+    console.log(currentFriend, 'CURRENTFRIEND')
+    const receiver = { _id: currentFriend.email, name: currentFriend.username || '', avatar: currentFriend.image };
+    const message = messages[0];
+    axios.post(`${pusherConfig.serverEndpoint}/users/messages`, { message, receiver });
+  }, []);
 
   const changeFontSize = () => {
     (fonts === 15 ? setFonts(28) : setFonts(15));
@@ -99,12 +109,6 @@ const FriendChat = ({ currentFriend, sender }) => {
       }}
     />
   );
-
-  const onSend = useCallback((messages = []) => {
-    const receiver = { _id: currentFriend.email, name: currentFriend.username || '', avatar: currentFriend.image };
-    const message = messages[0];
-    axios.post(`${pusherConfig.serverEndpoint}/users/messages`, { message, receiver });
-  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
