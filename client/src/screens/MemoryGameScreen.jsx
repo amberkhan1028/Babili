@@ -1,225 +1,223 @@
 /* eslint-disable global-require */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-use-before-define */
-import React, { useEffect, useState } from 'react';
-import {
-  Text, View, FlatList, Dimensions, Image,
-} from 'react-native';
-import { Button } from 'react-native-elements';
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-param-reassign */
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-import Modal from 'react-native-modal';
-import Constants from 'expo-constants';
-import MemoryGameHeader from '../components/MemoryGameHeader';
-import PuzzleCard from '../components/MemoryGameCard';
+import MemoryGameScore from '../components/MemoryGameScore';
+import MemoryGameCard from '../components/MemoryGameCard';
 
-import * as constant from '../components/constants';
+const cardData = [
+  {
+    src: require('../../assets/dog.jpg'),
+    name: 'dog',
+  },
+  {
+    src: require('../../assets/house.jpg'),
+    name: 'house',
+  },
+  {
+    src: require('../../assets/hat.jpg'),
+    name: 'hat',
+  },
+  {
+    src: require('../../assets/baby.jpg'),
+    name: 'baby',
+  },
+  {
+    src: require('../../assets/car.jpg'),
+    name: 'car',
+  },
+  {
+    src: require('../../assets/books.png'),
+    name: 'books',
+  },
+  {
+    src: require('../../assets/dogword.jpg'),
+    name: 'dog',
+  },
+  {
+    src: require('../../assets/wordhouse.png'),
+    name: 'house',
+  },
+  {
+    src: require('../../assets/wordhat.jpg'),
+    name: 'hat',
+  },
+  {
+    src: require('../../assets/wordbaby.jpg'),
+    name: 'baby',
+  },
+  {
+    src: require('../../assets/word-car-9.png'),
+    name: 'car',
+  },
+  {
+    src: require('../../assets/wordbook.jpg'),
+    name: 'books',
+  },
+];
 
-const imageInModal = Dimensions.get('window').width / 1.5;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffc857',
+    justifyContent: 'center',
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 40,
+  },
+  body: {
+    flex: 1,
+    padding: 5,
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 30,
+    color: '#f42b03',
+    marginTop: 10,
+  },
+});
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+class MemoryGameScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.cards = cardData;
+    this.cards.map((obj) => {
+      const id = Math.random()
+        .toString(36)
+        .substring(7);
+      obj.id = id;
+      obj.is_open = false;
+    });
 
-export default function MemoryGameScreen() {
-  const [columns, setColumns] = useState(constant.START_LEVEL);
-  const [rows, setRows] = useState(constant.START_LEVEL);
-
-  const [images, setImages] = useState(constant.CreatePuzzles(columns * rows));
-  const [puzzleStarted, setPuzzleStarted] = useState(false);
-  const [puzzle, setPuzzle] = useState({});
-  const [score, setScore] = useState(0);
-  const [counter, setCounter] = useState(0);
-  const [randomPuzzles, setRandomPuzzles] = useState(
-    constant.GetRandomItemsFromArray(images, images.length),
-  );
-  const [gameOver, setGameOver] = useState(false);
-  const [infoModalVisible, setInfoModalVisible] = useState(false);
-
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-
-  function startPuzzle() {
-    setPuzzleStarted(true);
-    showNextPuzzle();
+    this.cards = this.cards.sort(() => 0.5 - Math.random());
+    this.state = {
+      currentSelection: [],
+      selectedPairs: [],
+      score: 0,
+      cards: this.cards,
+    };
   }
 
-  function showNextPuzzle() {
-    if (counter < randomPuzzles.length) {
-      setPuzzle(randomPuzzles[counter]);
-      setCounter((c) => c + 1);
-    } else {
-      setGameOver(true);
+  getRowContents(cards) {
+    const contentsR = [];
+    let contents = [];
+    let count = 0;
+    cards.forEach((item) => {
+      count += 1;
+      contents.push(item);
+      if (count === 3) {
+        contentsR.push(contents);
+        count = 0;
+        contents = [];
+      }
+    });
+
+    return contentsR;
+  }
+
+  clickCard(id) {
+    let { currentSelection, score } = this.state;
+
+    const { selectedPairs, cards } = this.state;
+
+    const index = cards.findIndex((card) => card.id === id);
+
+    const localCards = cards;
+
+    if (
+      localCards[index].is_open === false
+      && selectedPairs.indexOf(localCards[index].name) === -1
+    ) {
+      localCards[index].is_open = true;
+
+      currentSelection.push({
+        index,
+        name: localCards[index].name,
+      });
+
+      if (currentSelection.length === 2) {
+        if (currentSelection[0].name === currentSelection[1].name) {
+          score += 1;
+          selectedPairs.push(localCards[index].name);
+        } else {
+          localCards[currentSelection[0].index].is_open = false;
+
+          setTimeout(() => {
+            localCards[index].is_open = false;
+            this.setState({
+              cards: localCards,
+            });
+          }, 1000);
+        }
+
+        currentSelection = [];
+      }
+
+      this.setState({
+        score,
+        cards: localCards,
+        currentSelection,
+      });
     }
   }
 
-  useEffect(() => {
-    onBackDrop();
-  }, [columns, rows]);
+  resetCards() {
+    let cards = this.cards.map((obj) => {
+      obj.is_open = false;
+      return obj;
+    });
 
-  function onBackDrop() {
-    setImages(constant.CreatePuzzles(columns * rows));
-    setButtonDisabled(true);
-    setPuzzleStarted(false);
-    setPuzzle({});
-    setScore(0);
-    setCounter(0);
-    setGameOver(false);
+    cards = cards.shuffle();
+
+    this.setState({
+      currentSelection: [],
+      selectedPairs: [],
+      cards,
+      score: 0,
+    });
   }
 
-  useEffect(
-    () => {
-      setButtonDisabled(!isAllImgsVisited());
-      console.warn('Started');
-    },
-    [JSON.stringify(images)],
-  );
-
-  useEffect(
-    () => {
-      setRandomPuzzles(constant.GetRandomItemsFromArray(images, images.length));
-    },
-    [JSON.stringify(images.map((img) => img.id))],
-  );
-
-  useEffect(() => {
-    setInfoModalVisible(true);
-  }, []);
-
-  function countScore(clickedCard) {
-    if (!puzzleStarted) {
-      setImages(
-        images.map((img) => {
-          if (img.id === clickedCard.id) return { ...img, visited: true };
-          return img;
-        }),
-      );
-      isAllImgsVisited();
-      return null;
-    }
-    if (puzzle.id === clickedCard.id) {
-      setScore((c) => c + 10);
-      setTimeout(() => showNextPuzzle(), 400);
-      return true;
-    }
-    setScore((c) => c - 5);
-    return false;
-  }
-
-  function isAllImgsVisited() {
-    let i;
-    for (i = 0; i < images.length; i++) if (!images[i].visited) return false;
-    return true;
-  }
-
-  return (
-    <View style={{ flex: 1 }}>
-      <MemoryGameHeader setColumns={setColumns} setRows={setRows} rows={rows} />
-
-      <View style={{
-        borderColor: 'lightgrey', borderRadius: 5, borderWidth: 1, margin: 3,
-      }}
-      >
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 25,
-            fontWeight: '200',
-            padding: 5,
-            color: '#fff',
-          }}
-        >
-          Score:
-          {' '}
-          {score}
-        </Text>
-      </View>
-
-      <FlatList
-        data={images}
-        key={columns * rows}
-        numColumns={columns}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <PuzzleCard card={item} countScore={countScore} gameOver={gameOver} columns={columns} />
-        )}
+  renderCards(cards) {
+    return cards.map((card, index) => (
+      <MemoryGameCard
+        key={index}
+        src={card.src}
+        name={card.name}
+        is_open={card.is_open}
+        clickCard={() => {
+          this.clickCard(card.id);
+        }}
       />
+    ));
+  }
 
-      {puzzleStarted && (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Image
-            resizeMode="contain"
-            style={{
-              width: '50%', height: '130%', alignSelf: 'center', marginBottom: 150,
-            }}
-            source={puzzle.name}
-          />
-        </View>
-      )}
+  renderRows() {
+    const { cards } = this.state;
+    const contents = this.getRowContents(cards);
+    return contents.map((itemCard, index) => (
+      <View key={index} style={styles.row}>
+        {this.renderCards(itemCard)}
+      </View>
+    ));
+  }
 
-      {!puzzleStarted && (
-        <Button
-          buttonStyle={{ width: 80, alignSelf: 'center', marginBottom: 50 }}
-          title="GO"
-          disabled={buttonDisabled}
-          onPress={() => (puzzleStarted ? '' : startPuzzle())}
-        />
-      )}
-
-      <Modal isVisible={gameOver} onBackdropPress={() => onBackDrop()}>
-        <View
-          style={{
-            flex: 0.6,
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: Constants.statusBarHeight,
-          }}
-        >
-          {score === rows * columns * 10 && (
-            <>
-              <Text>woohooo HIGH SCORE !!!!!</Text>
-              <Image
-                resizeMode="contain"
-                source={constant.RandomElementFromArray(constant.winnerGIFs)}
-                style={{ width: imageInModal, height: imageInModal }}
-              />
-            </>
-          )}
-          <Text style={{ fontSize: 30 }}>
-            SCORE:
-            {score}
-          </Text>
-        </View>
-      </Modal>
-
-      <Modal isVisible={infoModalVisible} onBackdropPress={() => setInfoModalVisible(false)}>
-        <View
-          style={{
-            padding: 15,
-            backgroundColor: '#fff',
-            alignSelf: 'center',
-            height: screenHeight / 2,
-          }}
-        >
-          <Text style={{ textAlign: 'center', fontSize: 20 }}>
-            Build stories to remember the pics
-          </Text>
-          <Image
-            source={require('../../assets/logo.png')}
-            resizeMode="contain"
-            style={{
-              marginTop: 20,
-              marginBottom: 20,
-              width: screenWidth,
-              height: 160,
-              alignSelf: 'center',
-            }}
-          />
-          <View style={{ left: 50, marginBottom: 20 }}>
-            <Text style={{ textAlign: 'left' }}> • Grandma saved Giraffe from Lion</Text>
-            <Text style={{ textAlign: 'left' }}> • Gradma cooked spicyfood for Elsa </Text>
-            <Text style={{ textAlign: 'left' }}> • It made her mouth so hot as sun</Text>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Can you match them all?</Text>
+        <View style={styles.body}>{this.renderRows.call(this)}</View>
+        <MemoryGameScore score={this.state.score} />
+      </View>
+    );
+  }
 }
+
+export default MemoryGameScreen;

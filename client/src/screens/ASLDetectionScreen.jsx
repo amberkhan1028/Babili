@@ -190,7 +190,7 @@ export default function ASLDetectionScreen() {
             <TouchableOpacity
               onPress={loadNewTranslation}
               style={{
-                margin: 30, backgroundColor: 'red', borderRadius: 20, justifyContent: 'center',
+                margin: 30, backgroundColor: '#f42B03', borderRadius: 20, justifyContent: 'center',
               }}
             >
               <Text style={{
