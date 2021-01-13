@@ -9,6 +9,7 @@ import {
   FB_SECRET,
   GOOGLE_APPLICATION_CREDENTIALS,
   BASE_URL,
+  OCR,
 
 } from '@env';
 
@@ -23,8 +24,8 @@ const firebaseConfig = {
   measurementId: 'G-8KFB07WSNL',
 };
 export default {
-  GOOGLE_IOS,
   DIALOG_FLOW_CLIENT_EMAIL,
+  GOOGLE_IOS,
   DIALOG_FLOW_PROJECT_ID,
   DIALOG_FLOW_PRIVATE_KEY,
   OCR,
