@@ -33,34 +33,27 @@ const FriendChat = ({ currentFriend, sender }) => {
     const pusher = new Pusher(pusherConfig.key, pusherConfig);
     const chatChannel = pusher.subscribe('chat_channel');
     chatChannel.bind('pusher:subscription_succeeded', () => {
-      // console.warn('subscription to channel ok!');
     });
     chatChannel.bind('pusher:subscription_error', () => {
       console.warn('subscription to channel error!');
     });
     chatChannel.bind('join', ({ name }) => console.warn(`${name} joined the chat`));
     chatChannel.bind('message', ({ message, receiver }) => {
-      // update messages anytime there's a new message
-      console.log('message: ', message);
-      console.log('receiver: ', receiver);
       if (message.user._id === sender.email || receiver._id === sender.email) {
         setMessages((prevMessages) => GiftedChat.append(prevMessages, message));
       }
     });
     axios.put(`${pusherConfig.serverEndpoint}/users/${sender.email}`, { name: sender.username });
-    // get previous messages
     (async () => {
       const { data } = await axios.get(`${pusherConfig.serverEndpoint}/users/messages/?sender=${sender.email}&receiver=${currentFriend.email}`);
-      // console.log(data, 'DATA');
       setMessages(data);
     })();
-  }, [currentFriend, messages, fonts]);
+  }, [currentFriend, fonts]);
 
   const onSend = useCallback((messages = []) => {
-    console.log(currentFriend, 'CURRENTFRIEND')
     const receiver = { _id: currentFriend.email, name: currentFriend.username || '', avatar: currentFriend.image };
     const message = messages[0];
-    axios.post(`${pusherConfig.serverEndpoint}/users/messages`, { message, receiver });
+    axios.post(`${pusherConfig.serverEndpoint}/users/messages`, { message, currentFriend });
   }, []);
 
   const changeFontSize = () => {
@@ -115,7 +108,6 @@ const FriendChat = ({ currentFriend, sender }) => {
       <View style={{ flex: 2 }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          // keyboardVerticalOffset={90}
         >
           <GiftedChat
             messages={messages}

@@ -103,9 +103,6 @@ const FriendsScreen = ({ navigation, isFocused }) => {
       <StatusBar
         barStyle="dark-content"
       />
-      <View>
-        {/* <TopFriends /> */}
-      </View>
       <View style={{ flexDirection: 'row', flex: 1 }}>
         <View style={styles.chatWrapper}>
           <FriendSideBar

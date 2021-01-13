@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
 });
 
 function FriendSideBar({ friendLists, onFriendPress }) {
-// alert(JSON.stringify(friendLists))
   return (
     <View style={styles.container}>
       {(friendLists && friendLists.length > 0)
@@ -30,7 +29,6 @@ function FriendSideBar({ friendLists, onFriendPress }) {
       <TouchableOpacity
         key={i}
         onPress={() => {
-          console.log('friend', friend);
           onFriendPress(friend);
         }}
       >
